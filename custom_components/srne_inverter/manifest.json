@@ -1,0 +1,16 @@
+{
+  "domain": "srne_inverter",
+  "name": "SRNE Inverter",
+  "codeowners": [
+    "@Szajerxyz"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/Szajerxyz/ha-srne-inverter",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/Szajerxyz/ha-srne-inverter/issues",
+  "requirements": [
+    "pymodbus>=3.6.0"
+  ],
+  "version": "0.1.0"
+}

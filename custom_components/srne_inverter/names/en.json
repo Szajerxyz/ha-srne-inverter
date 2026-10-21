@@ -1,0 +1,1089 @@
+{
+  "_comment": "Entity names (reference language). 'id' = English entity_id suffix (entity_id = <domain>.srne_<id>). To translate: copy this file to <language-code>.json (e.g. de.json), keep the keys, translate only the values; 'id' is only needed in en.json. Language = Home Assistant system language; fallback = en.",
+  "prefix": "SRNE",
+  "groups": {
+    "info": "Information",
+    "grid": "Grid and output",
+    "pv": "PV and DC bus",
+    "battery": "Battery",
+    "energy": "Energy",
+    "schedule": "Schedule",
+    "mode": "Operating mode",
+    "battery_settings": "Battery settings",
+    "grid_settings": "Grid settings"
+  },
+  "common": {
+    "unknown": "Unknown",
+    "none": "None"
+  },
+  "entities": {
+    "restart": {
+      "id": "machine_reset",
+      "name": "Machine reset (restart inverter)"
+    },
+    "settings_lock": {
+      "id": "settings_lock",
+      "name": "Settings lock"
+    },
+    "serial_number": {
+      "id": "serial_number",
+      "name": "Serial number"
+    },
+    "firmware_build_time": {
+      "id": "firmware_build_time",
+      "name": "Firmware build time"
+    },
+    "mcu1_version": {
+      "id": "mcu1_software_version",
+      "name": "MCU1 software version"
+    },
+    "mcu2_version": {
+      "id": "mcu2_software_version",
+      "name": "MCU2 software version"
+    },
+    "lcd_version": {
+      "id": "lcd_software_version",
+      "name": "LCD software version"
+    },
+    "minor_version": {
+      "id": "minor_version",
+      "name": "Minor version"
+    },
+    "hw_control_version": {
+      "id": "control_panel_hardware_version",
+      "name": "Control panel hardware version"
+    },
+    "hw_power_version": {
+      "id": "power_board_hardware_version",
+      "name": "Power board hardware version"
+    },
+    "protocol_version": {
+      "id": "modbus_protocol_version",
+      "name": "Modbus protocol version"
+    },
+    "battery_type": {
+      "id": "battery_type",
+      "name": "Battery type"
+    },
+    "bms_protocol": {
+      "id": "bms_protocol",
+      "name": "BMS communication protocol"
+    },
+    "rs485_address": {
+      "id": "rs485_address",
+      "name": "RS485 address"
+    },
+    "temp_dcdc": {
+      "id": "dcdc_heatsink_temperature",
+      "name": "DC-DC heatsink temperature"
+    },
+    "temp_dcac": {
+      "id": "dcac_heatsink_temperature",
+      "name": "DC-AC heatsink temperature"
+    },
+    "temp_transformer": {
+      "id": "transformer_temperature",
+      "name": "Transformer temperature"
+    },
+    "temp_ambient": {
+      "id": "ambient_temperature",
+      "name": "Ambient temperature"
+    },
+    "machine_state": {
+      "id": "machine_state",
+      "name": "Machine state"
+    },
+    "fault_codes": {
+      "id": "fault_codes",
+      "name": "Fault codes"
+    },
+    "fault_description": {
+      "id": "fault_description",
+      "name": "Fault description"
+    },
+    "fault_active": {
+      "id": "fault_active",
+      "name": "Fault active"
+    },
+    "pv1_voltage": {
+      "id": "pv1_voltage",
+      "name": "PV1 voltage"
+    },
+    "pv1_current": {
+      "id": "pv1_current",
+      "name": "PV1 current"
+    },
+    "pv1_power": {
+      "id": "pv1_power",
+      "name": "PV1 power"
+    },
+    "pv2_voltage": {
+      "id": "pv2_voltage",
+      "name": "PV2 voltage"
+    },
+    "pv2_current": {
+      "id": "pv2_current",
+      "name": "PV2 current"
+    },
+    "pv2_power": {
+      "id": "pv2_power",
+      "name": "PV2 power"
+    },
+    "pv_power_total": {
+      "id": "pv_total_power",
+      "name": "PV total power"
+    },
+    "pv_voltage": {
+      "id": "bus_voltage_total",
+      "name": "Total bus voltage"
+    },
+    "bus_positive_voltage": {
+      "id": "positive_bus_voltage",
+      "name": "Positive bus voltage"
+    },
+    "bus_negative_voltage": {
+      "id": "negative_bus_voltage",
+      "name": "Negative bus voltage"
+    },
+    "battery_soc": {
+      "id": "battery_soc",
+      "name": "Battery SOC"
+    },
+    "battery_voltage": {
+      "id": "battery_voltage",
+      "name": "Battery voltage"
+    },
+    "battery_current": {
+      "id": "battery_current",
+      "name": "Battery current (+ discharge / - charge)"
+    },
+    "battery_power": {
+      "id": "battery_power",
+      "name": "Battery power (+ discharge / - charge)"
+    },
+    "battery_temp": {
+      "id": "battery_temperature",
+      "name": "Battery temperature"
+    },
+    "pvac_power": {
+      "id": "charge_power",
+      "name": "Charge power (PV + AC)"
+    },
+    "charge_state": {
+      "id": "charge_state",
+      "name": "Charge state"
+    },
+    "battery_soh": {
+      "id": "battery_soh",
+      "name": "Battery SOH"
+    },
+    "battery_rated_capacity": {
+      "id": "battery_rated_capacity",
+      "name": "Battery rated capacity"
+    },
+    "battery_remaining_capacity": {
+      "id": "battery_remaining_capacity",
+      "name": "Battery remaining capacity"
+    },
+    "battery_cycles": {
+      "id": "battery_cycle_count",
+      "name": "Battery cycle count"
+    },
+    "bms_voltage": {
+      "id": "bms_battery_voltage",
+      "name": "BMS battery voltage"
+    },
+    "bms_current": {
+      "id": "bms_battery_current",
+      "name": "BMS battery current"
+    },
+    "bms_temp": {
+      "id": "bms_battery_temperature",
+      "name": "BMS battery temperature"
+    },
+    "bms_charge_limit_voltage": {
+      "id": "bms_charge_limit_voltage",
+      "name": "BMS charge limit voltage"
+    },
+    "bms_charge_limit_current": {
+      "id": "bms_charge_limit_current",
+      "name": "BMS charge limit current"
+    },
+    "bms_discharge_limit_current": {
+      "id": "bms_discharge_limit_current",
+      "name": "BMS discharge limit current"
+    },
+    "bms_alarm_1": {
+      "id": "bms_alarm_1",
+      "name": "BMS alarm 1"
+    },
+    "bms_alarm_2": {
+      "id": "bms_alarm_2",
+      "name": "BMS alarm 2"
+    },
+    "bms_protection_1": {
+      "id": "bms_protection_1",
+      "name": "BMS protection 1"
+    },
+    "bms_protection_2": {
+      "id": "bms_protection_2",
+      "name": "BMS protection 2"
+    },
+    "bms_alarm": {
+      "id": "bms_alarm",
+      "name": "BMS alarm"
+    },
+    "bms_protection": {
+      "id": "bms_protection",
+      "name": "BMS protection"
+    },
+    "battery_charge_today_kwh": {
+      "id": "battery_charge_energy_today",
+      "name": "Battery charge energy today"
+    },
+    "battery_discharge_today_kwh": {
+      "id": "battery_discharge_energy_today",
+      "name": "Battery discharge energy today"
+    },
+    "battery_charge_today_ah": {
+      "id": "battery_charge_today_ah",
+      "name": "Battery charge today (Ah)"
+    },
+    "battery_discharge_today_ah": {
+      "id": "battery_discharge_today_ah",
+      "name": "Battery discharge today (Ah)"
+    },
+    "battery_charge_total_ah": {
+      "id": "battery_charge_total_ah",
+      "name": "Battery charge total (Ah)"
+    },
+    "battery_discharge_total_ah": {
+      "id": "battery_discharge_total_ah",
+      "name": "Battery discharge total (Ah)"
+    },
+    "battery_grid_charge_today_ah": {
+      "id": "grid_charge_today_ah",
+      "name": "Grid charge today (Ah)"
+    },
+    "battery_grid_charge_total_ah": {
+      "id": "grid_charge_total_ah",
+      "name": "Grid charge total (Ah)"
+    },
+    "grid_freq": {
+      "id": "grid_frequency",
+      "name": "Grid frequency"
+    },
+    "output_freq": {
+      "id": "inverter_output_frequency",
+      "name": "Inverter output frequency"
+    },
+    "grid_power_total": {
+      "id": "grid_total_active_power",
+      "name": "Grid total active power (+ export / - import)"
+    },
+    "load_power_total": {
+      "id": "load_total_active_power",
+      "name": "Load total active power"
+    },
+    "home_power_total": {
+      "id": "home_load_total_active_power",
+      "name": "Home load total active power"
+    },
+    "second_power_total": {
+      "id": "second_load_total_active_power",
+      "name": "Second load total active power"
+    },
+    "grid_l1_voltage": {
+      "id": "grid_l1_voltage",
+      "name": "Grid L1 voltage"
+    },
+    "grid_l1_current": {
+      "id": "grid_l1_current",
+      "name": "Grid L1 current"
+    },
+    "grid_l1_active_power": {
+      "id": "grid_l1_active_power",
+      "name": "Grid L1 active power (+ export / - import)"
+    },
+    "grid_l1_apparent": {
+      "id": "grid_l1_apparent_power",
+      "name": "Grid L1 apparent power"
+    },
+    "output_l1_voltage": {
+      "id": "inverter_output_l1_voltage",
+      "name": "Inverter output L1 voltage"
+    },
+    "output_l1_current": {
+      "id": "inverter_output_l1_current",
+      "name": "Inverter output L1 current"
+    },
+    "load_l1_current": {
+      "id": "load_l1_current",
+      "name": "Load L1 current"
+    },
+    "load_l1_power": {
+      "id": "load_l1_active_power",
+      "name": "Load L1 active power"
+    },
+    "load_l1_apparent": {
+      "id": "load_l1_apparent_power",
+      "name": "Load L1 apparent power"
+    },
+    "home_l1_power": {
+      "id": "home_load_l1_active_power",
+      "name": "Home load L1 active power"
+    },
+    "second_l1_power": {
+      "id": "second_load_l1_active_power",
+      "name": "Second load L1 active power"
+    },
+    "grid_l2_voltage": {
+      "id": "grid_l2_voltage",
+      "name": "Grid L2 voltage"
+    },
+    "grid_l2_current": {
+      "id": "grid_l2_current",
+      "name": "Grid L2 current"
+    },
+    "grid_l2_active_power": {
+      "id": "grid_l2_active_power",
+      "name": "Grid L2 active power (+ export / - import)"
+    },
+    "grid_l2_apparent": {
+      "id": "grid_l2_apparent_power",
+      "name": "Grid L2 apparent power"
+    },
+    "output_l2_voltage": {
+      "id": "inverter_output_l2_voltage",
+      "name": "Inverter output L2 voltage"
+    },
+    "output_l2_current": {
+      "id": "inverter_output_l2_current",
+      "name": "Inverter output L2 current"
+    },
+    "load_l2_current": {
+      "id": "load_l2_current",
+      "name": "Load L2 current"
+    },
+    "load_l2_power": {
+      "id": "load_l2_active_power",
+      "name": "Load L2 active power"
+    },
+    "load_l2_apparent": {
+      "id": "load_l2_apparent_power",
+      "name": "Load L2 apparent power"
+    },
+    "home_l2_power": {
+      "id": "home_load_l2_active_power",
+      "name": "Home load L2 active power"
+    },
+    "second_l2_power": {
+      "id": "second_load_l2_active_power",
+      "name": "Second load L2 active power"
+    },
+    "grid_l3_voltage": {
+      "id": "grid_l3_voltage",
+      "name": "Grid L3 voltage"
+    },
+    "grid_l3_current": {
+      "id": "grid_l3_current",
+      "name": "Grid L3 current"
+    },
+    "grid_l3_active_power": {
+      "id": "grid_l3_active_power",
+      "name": "Grid L3 active power (+ export / - import)"
+    },
+    "grid_l3_apparent": {
+      "id": "grid_l3_apparent_power",
+      "name": "Grid L3 apparent power"
+    },
+    "output_l3_voltage": {
+      "id": "inverter_output_l3_voltage",
+      "name": "Inverter output L3 voltage"
+    },
+    "output_l3_current": {
+      "id": "inverter_output_l3_current",
+      "name": "Inverter output L3 current"
+    },
+    "load_l3_current": {
+      "id": "load_l3_current",
+      "name": "Load L3 current"
+    },
+    "load_l3_power": {
+      "id": "load_l3_active_power",
+      "name": "Load L3 active power"
+    },
+    "load_l3_apparent": {
+      "id": "load_l3_apparent_power",
+      "name": "Load L3 apparent power"
+    },
+    "home_l3_power": {
+      "id": "home_load_l3_active_power",
+      "name": "Home load L3 active power"
+    },
+    "second_l3_power": {
+      "id": "second_load_l3_active_power",
+      "name": "Second load L3 active power"
+    },
+    "energy_pv_today": {
+      "id": "pv_generation_today",
+      "name": "PV generation today"
+    },
+    "energy_pv_total": {
+      "id": "pv_generation_total",
+      "name": "PV generation total"
+    },
+    "energy_export_today": {
+      "id": "energy_to_grid_today",
+      "name": "Energy to grid today"
+    },
+    "energy_export_total": {
+      "id": "energy_to_grid_total",
+      "name": "Energy to grid total"
+    },
+    "energy_import_today": {
+      "id": "load_energy_from_grid_today",
+      "name": "Load energy from grid today"
+    },
+    "energy_import_total": {
+      "id": "load_energy_from_grid_total",
+      "name": "Load energy from grid total"
+    },
+    "energy_load_today": {
+      "id": "load_energy_today",
+      "name": "Load energy today"
+    },
+    "energy_load_total": {
+      "id": "load_energy_total",
+      "name": "Load energy total"
+    },
+    "grid_charge_enable": {
+      "id": "timed_charge_enable",
+      "name": "Timed charge enable"
+    },
+    "discharge_enable": {
+      "id": "timed_discharge_enable",
+      "name": "Timed discharge enable"
+    },
+    "grid_charge_start_1": {
+      "id": "timed_charge_1_start",
+      "name": "Timed charge 1 start time"
+    },
+    "grid_charge_stop_1": {
+      "id": "timed_charge_1_end",
+      "name": "Timed charge 1 end time"
+    },
+    "discharge_start_1": {
+      "id": "timed_discharge_1_start",
+      "name": "Timed discharge 1 start time"
+    },
+    "discharge_stop_1": {
+      "id": "timed_discharge_1_end",
+      "name": "Timed discharge 1 end time"
+    },
+    "grid_charge_soc_end_1": {
+      "id": "timed_charge_1_stop_soc",
+      "name": "Timed charge 1 stop SOC"
+    },
+    "charge_stop_volt_1": {
+      "id": "timed_charge_1_stop_voltage",
+      "name": "Timed charge 1 stop voltage"
+    },
+    "grid_charge_power_1": {
+      "id": "timed_charge_1_max_power",
+      "name": "Timed charge 1 max power"
+    },
+    "discharge_stop_soc_1": {
+      "id": "timed_discharge_1_stop_soc",
+      "name": "Timed discharge 1 stop SOC"
+    },
+    "discharge_stop_volt_1": {
+      "id": "timed_discharge_1_stop_voltage",
+      "name": "Timed discharge 1 stop voltage"
+    },
+    "discharge_max_power_1": {
+      "id": "timed_discharge_1_max_power",
+      "name": "Timed discharge 1 max power"
+    },
+    "charge_grid_1": {
+      "id": "timed_charge_1_grid_source",
+      "name": "Timed charge 1 from grid"
+    },
+    "charge_gen_1": {
+      "id": "timed_charge_1_generator_source",
+      "name": "Timed charge 1 from generator"
+    },
+    "charge_start_2": {
+      "id": "timed_charge_2_start",
+      "name": "Timed charge 2 start time"
+    },
+    "charge_stop_2": {
+      "id": "timed_charge_2_end",
+      "name": "Timed charge 2 end time"
+    },
+    "discharge_start_2": {
+      "id": "timed_discharge_2_start",
+      "name": "Timed discharge 2 start time"
+    },
+    "discharge_stop_2": {
+      "id": "timed_discharge_2_end",
+      "name": "Timed discharge 2 end time"
+    },
+    "charge_stop_soc_2": {
+      "id": "timed_charge_2_stop_soc",
+      "name": "Timed charge 2 stop SOC"
+    },
+    "charge_stop_volt_2": {
+      "id": "timed_charge_2_stop_voltage",
+      "name": "Timed charge 2 stop voltage"
+    },
+    "charge_max_power_2": {
+      "id": "timed_charge_2_max_power",
+      "name": "Timed charge 2 max power"
+    },
+    "discharge_stop_soc_2": {
+      "id": "timed_discharge_2_stop_soc",
+      "name": "Timed discharge 2 stop SOC"
+    },
+    "discharge_stop_volt_2": {
+      "id": "timed_discharge_2_stop_voltage",
+      "name": "Timed discharge 2 stop voltage"
+    },
+    "discharge_max_power_2": {
+      "id": "timed_discharge_2_max_power",
+      "name": "Timed discharge 2 max power"
+    },
+    "charge_grid_2": {
+      "id": "timed_charge_2_grid_source",
+      "name": "Timed charge 2 from grid"
+    },
+    "charge_gen_2": {
+      "id": "timed_charge_2_generator_source",
+      "name": "Timed charge 2 from generator"
+    },
+    "charge_start_3": {
+      "id": "timed_charge_3_start",
+      "name": "Timed charge 3 start time"
+    },
+    "charge_stop_3": {
+      "id": "timed_charge_3_end",
+      "name": "Timed charge 3 end time"
+    },
+    "discharge_start_3": {
+      "id": "timed_discharge_3_start",
+      "name": "Timed discharge 3 start time"
+    },
+    "discharge_stop_3": {
+      "id": "timed_discharge_3_end",
+      "name": "Timed discharge 3 end time"
+    },
+    "charge_stop_soc_3": {
+      "id": "timed_charge_3_stop_soc",
+      "name": "Timed charge 3 stop SOC"
+    },
+    "charge_stop_volt_3": {
+      "id": "timed_charge_3_stop_voltage",
+      "name": "Timed charge 3 stop voltage"
+    },
+    "charge_max_power_3": {
+      "id": "timed_charge_3_max_power",
+      "name": "Timed charge 3 max power"
+    },
+    "discharge_stop_soc_3": {
+      "id": "timed_discharge_3_stop_soc",
+      "name": "Timed discharge 3 stop SOC"
+    },
+    "discharge_stop_volt_3": {
+      "id": "timed_discharge_3_stop_voltage",
+      "name": "Timed discharge 3 stop voltage"
+    },
+    "discharge_max_power_3": {
+      "id": "timed_discharge_3_max_power",
+      "name": "Timed discharge 3 max power"
+    },
+    "charge_grid_3": {
+      "id": "timed_charge_3_grid_source",
+      "name": "Timed charge 3 from grid"
+    },
+    "charge_gen_3": {
+      "id": "timed_charge_3_generator_source",
+      "name": "Timed charge 3 from generator"
+    },
+    "week_day_0": {
+      "id": "schedule_monday",
+      "name": "Schedule enabled Monday"
+    },
+    "week_day_1": {
+      "id": "schedule_tuesday",
+      "name": "Schedule enabled Tuesday"
+    },
+    "week_day_2": {
+      "id": "schedule_wednesday",
+      "name": "Schedule enabled Wednesday"
+    },
+    "week_day_3": {
+      "id": "schedule_thursday",
+      "name": "Schedule enabled Thursday"
+    },
+    "week_day_4": {
+      "id": "schedule_friday",
+      "name": "Schedule enabled Friday"
+    },
+    "week_day_5": {
+      "id": "schedule_saturday",
+      "name": "Schedule enabled Saturday"
+    },
+    "week_day_6": {
+      "id": "schedule_sunday",
+      "name": "Schedule enabled Sunday"
+    },
+    "priority_mode": {
+      "id": "pv_power_priority",
+      "name": "PV power priority"
+    },
+    "grid_mode": {
+      "id": "hybrid_grid_mode",
+      "name": "Hybrid grid mode"
+    },
+    "battery_mode": {
+      "id": "battery_energy_management",
+      "name": "Battery energy management"
+    },
+    "grid_charge_allow": {
+      "id": "grid_charging_enable",
+      "name": "Grid charging enable"
+    },
+    "inverter_charge_current": {
+      "id": "max_charge_current",
+      "name": "Max charge current"
+    },
+    "grid_charge_current_max": {
+      "id": "max_grid_charge_current",
+      "name": "Max grid charge current"
+    },
+    "stop_charge_current": {
+      "id": "charge_stop_current",
+      "name": "Charge stop current"
+    },
+    "limit_max_charge": {
+      "id": "charge_stop_soc",
+      "name": "Charge stop SOC"
+    },
+    "discharge_max_current": {
+      "id": "max_discharge_current",
+      "name": "Max discharge current"
+    },
+    "discharge_start_voltage": {
+      "id": "battery_voltage_switch_to_inverter",
+      "name": "Battery voltage switch to inverter"
+    },
+    "limit_discharge_sbu": {
+      "id": "battery_soc_switch_to_grid",
+      "name": "Battery SOC switch to grid"
+    },
+    "limit_recharge": {
+      "id": "battery_soc_switch_to_battery",
+      "name": "Battery SOC switch to battery"
+    },
+    "low_soc_alarm": {
+      "id": "battery_low_soc_alarm",
+      "name": "Battery low SOC alarm"
+    },
+    "limit_discharge_offgrid": {
+      "id": "battery_discharge_cutoff_soc",
+      "name": "Battery discharge cut-off SOC"
+    },
+    "low_voltage_delay": {
+      "id": "over_discharge_delay_time",
+      "name": "Over-discharge delay time"
+    },
+    "discharge_stop_voltage": {
+      "id": "battery_voltage_switch_to_grid",
+      "name": "Battery voltage switch to grid"
+    },
+    "charge_max_voltage": {
+      "id": "max_charge_voltage",
+      "name": "Max charge voltage"
+    },
+    "recharge_voltage": {
+      "id": "recharge_voltage",
+      "name": "Recharge voltage"
+    },
+    "low_voltage_recovery": {
+      "id": "over_discharge_recovery_voltage",
+      "name": "Over-discharge recovery voltage"
+    },
+    "low_voltage_alarm": {
+      "id": "battery_low_voltage_alarm",
+      "name": "Battery low voltage alarm"
+    },
+    "low_voltage_error": {
+      "id": "battery_low_voltage_fault",
+      "name": "Battery low voltage fault"
+    },
+    "bms_charge_limit_mode": {
+      "id": "bms_charge_current_limit_mode",
+      "name": "BMS charge current limit mode"
+    },
+    "bms_comm": {
+      "id": "bms_communication",
+      "name": "BMS communication"
+    },
+    "temp_compensation": {
+      "id": "battery_temperature_compensation",
+      "name": "Battery temperature compensation"
+    },
+    "grid_sell_max_power": {
+      "id": "max_sell_power",
+      "name": "Max sell power"
+    },
+    "grid_import_max_power": {
+      "id": "max_import_power",
+      "name": "Max import power"
+    },
+    "ct_ratio": {
+      "id": "external_ct_ratio",
+      "name": "External CT ratio"
+    },
+    "zero_export_power": {
+      "id": "zero_export_power",
+      "name": "Zero export power"
+    },
+    "reactive_power": {
+      "id": "reactive_power",
+      "name": "Reactive power (+ over-excited / - under-excited)"
+    },
+    "power_factor": {
+      "id": "power_factor",
+      "name": "Power factor (+ over-excited / - under-excited)"
+    },
+    "grid_standard": {
+      "id": "grid_standard",
+      "name": "Grid standard"
+    },
+    "grid_frequency_setting": {
+      "id": "grid_frequency_setting",
+      "name": "Grid frequency setting"
+    }
+  },
+  "options": {
+    "machine_state": {
+      "initialization": "Initialization",
+      "standby": "Standby",
+      "grid_operation": "Grid operation",
+      "inverter_operation": "Inverter operation"
+    },
+    "charge_state": {
+      "off": "Off",
+      "quick": "Quick charge",
+      "constant_voltage": "Constant voltage",
+      "float": "Float",
+      "li_activation": "Li battery activation",
+      "full": "Full"
+    },
+    "battery_type": {
+      "user_defined": "User defined",
+      "sld": "SLD",
+      "fld": "FLD",
+      "gel": "GEL",
+      "lfp14": "LFP14",
+      "lfp15": "LFP15",
+      "lfp16": "LFP16",
+      "lfp7": "LFP7",
+      "lfp8": "LFP8",
+      "lfp9": "LFP9",
+      "nc7": "NC7",
+      "nc8": "NC8",
+      "nc13": "NC13",
+      "nc14": "NC14",
+      "no_battery": "No battery"
+    },
+    "bms_protocol": {
+      "uze": "UZE",
+      "pyl_can": "PYL_CAN",
+      "sgp": "SGP",
+      "gsl": "GSL",
+      "dey": "DEY",
+      "honghe": "HONGHE"
+    },
+    "grid_standard": {
+      "en_50549_1": "Europe: EN 50549-1"
+    },
+    "priority_mode": {
+      "load_priority": "Load priority",
+      "charge_priority": "Charge priority",
+      "grid_priority": "Grid priority"
+    },
+    "grid_mode": {
+      "grid_connected": "Grid-connected",
+      "limit_ups_load": "Limit power to UPS load",
+      "limit_home_load": "Limit power to home load",
+      "grid_side_coupling": "Grid-side coupling"
+    },
+    "battery_mode": {
+      "standby": "Standby mode",
+      "supply_ups_loads": "Supply UPS loads",
+      "supply_home_loads": "Supply home loads",
+      "sell_to_grid": "Sell to grid"
+    },
+    "bms_charge_limit_mode": {
+      "hmi_settings": "HMI settings",
+      "bms_protocol": "BMS protocol",
+      "inverter_logic": "Inverter logic"
+    },
+    "bms_comm": {
+      "off": "Off",
+      "rs485": "RS485",
+      "can": "CAN"
+    }
+  },
+  "faults": {
+    "1": {
+      "title": "Battery undervoltage alarm",
+      "description": "Battery undervoltage alarm.",
+      "remedy": "Charge the battery and wait until the battery voltage is higher than the value set in parameter [14]."
+    },
+    "2": {
+      "title": "Battery discharge overcurrent (software)",
+      "description": "Battery discharge average current overcurrent (software protection)."
+    },
+    "3": {
+      "title": "Battery not connected",
+      "description": "Battery not-connected alarm.",
+      "remedy": "Check that the battery is reliably connected and check the battery circuit breaker. Ensure that the BMS is able to communicate properly."
+    },
+    "4": {
+      "title": "Battery undervoltage, discharge stopped",
+      "description": "Battery undervoltage stop discharge alarm.",
+      "remedy": "Manual reset: switch off and restart. Automatic reset: charge the battery so that its voltage is higher than the value set in parameter [35]."
+    },
+    "5": {
+      "title": "Battery overcurrent (hardware)",
+      "description": "Battery overcurrent (hardware protection)."
+    },
+    "6": {
+      "title": "Charging overvoltage",
+      "description": "Charging overvoltage protection.",
+      "remedy": "Manually power off and restart. Check whether the battery voltage exceeds the limit; if so, discharge the battery until the voltage is below the battery over-voltage recovery point."
+    },
+    "7": {
+      "title": "Bus overvoltage (hardware)",
+      "description": "Bus overvoltage (hardware protection)."
+    },
+    "8": {
+      "title": "Bus overvoltage (software)",
+      "description": "Bus overvoltage (software protection)."
+    },
+    "9": {
+      "title": "PV overvoltage",
+      "description": "PV overvoltage protection."
+    },
+    "10": {
+      "title": "Boost overcurrent (software)",
+      "description": "Boost overcurrent (software protection)."
+    },
+    "11": {
+      "title": "Boost overcurrent (hardware)",
+      "description": "Boost overcurrent (hardware protection)."
+    },
+    "12": {
+      "title": "SPI communication error",
+      "description": "SPI communication fault of master and slave chips."
+    },
+    "13": {
+      "title": "Bypass overload",
+      "description": "Bypass overload protection.",
+      "remedy": "Reduce the load power and restart the device (see item 11 of the protection functions)."
+    },
+    "14": {
+      "title": "Inverter overload",
+      "description": "Inverter overload protection.",
+      "remedy": "Reduce the load power and restart the device (see item 11 of the protection functions)."
+    },
+    "15": {
+      "title": "Inverter overcurrent (hardware)",
+      "description": "Inverter overcurrent (hardware protection)."
+    },
+    "16": {
+      "title": "Slave chip OFF request",
+      "description": "Slave chip OFF request fault."
+    },
+    "17": {
+      "title": "Inverter short circuit",
+      "description": "Inverter short-circuit protection."
+    },
+    "18": {
+      "title": "Bus soft-start failure",
+      "description": "Bus soft-start failure."
+    },
+    "19": {
+      "title": "PV heat sink over-temperature",
+      "description": "Buck heat sink over temperature protection.",
+      "remedy": "Normal charging and discharging resumes when the heat sink cools below the over-temperature recovery temperature (fault is raised above 90 °C for 3 s)."
+    },
+    "20": {
+      "title": "Inverter heat sink over-temperature",
+      "description": "Inverter AC output with load or AC charging radiator over-temperature protection.",
+      "remedy": "Normal charging and discharging resumes when the heat sink cools below the over-temperature recovery temperature (fault is raised above 90 °C for 3 s)."
+    },
+    "21": {
+      "title": "Fan failure",
+      "description": "Fan blockage or failure fault.",
+      "remedy": "After powering off the machine, manually turn the fan to check for foreign matter blockage."
+    },
+    "22": {
+      "title": "Memory failure (EEPROM)",
+      "description": "Memory failure."
+    },
+    "23": {
+      "title": "Model setting error",
+      "description": "Model setting error."
+    },
+    "24": {
+      "title": "Bus voltage imbalance",
+      "description": "Positive and negative bus voltage imbalance."
+    },
+    "25": {
+      "title": "Bus short circuit",
+      "description": "Bus short-circuit."
+    },
+    "26": {
+      "title": "AC output backfeeds bypass input",
+      "description": "Inverted AC Output Backfills to Bypass AC Input.",
+      "remedy": "Manually turn off and restart the machine; if the fault reappears, contact after-sales service."
+    },
+    "27": {
+      "title": "Grid input phase loss",
+      "description": "Grid input phase lose."
+    },
+    "28": {
+      "title": "Grid input phase error",
+      "description": "Grid input phase error.",
+      "remedy": "Make sure that the phase of the AC input is the same as the phase of the AC output."
+    },
+    "29": {
+      "title": "Internal boost circuit failure",
+      "description": "Internal battery boost circuit failure."
+    },
+    "30": {
+      "title": "Low battery capacity (below 10%)",
+      "description": "Alarm given when battery capacity rate is lower than 10% (setting BMS to enable validity)."
+    },
+    "31": {
+      "title": "Low battery capacity (below 5%)",
+      "description": "Alarm given when battery capacity rate is lower than 5% (setting BMS to enable validity)."
+    },
+    "32": {
+      "title": "Stop: low battery capacity",
+      "description": "Inverter stops when battery capacity is low (setting BMS to enable validity)."
+    },
+    "33": {
+      "title": "Control CAN fault (parallel)",
+      "description": "Control CAN fault in parallel operation."
+    },
+    "34": {
+      "title": "CAN communication fault (parallel)",
+      "description": "CAN communication fault in parallel operation."
+    },
+    "35": {
+      "title": "Parallel ID setting error",
+      "description": "Parallel ID (communication address) setting error."
+    },
+    "36": {
+      "title": "Balance bridge overcurrent",
+      "description": "Balance bridge arm overcurrent failure."
+    },
+    "37": {
+      "title": "Parallel current sharing fault",
+      "description": "Parallel current sharing fault."
+    },
+    "38": {
+      "title": "Battery voltage difference (parallel)",
+      "description": "Large battery voltage difference in parallel mode."
+    },
+    "39": {
+      "title": "AC source mismatch (parallel)",
+      "description": "Inconsistent AC input source in parallel mode."
+    },
+    "40": {
+      "title": "Hardware sync error (parallel)",
+      "description": "Hardware synchronization signal error in parallel mode."
+    },
+    "41": {
+      "title": "Inverter DC voltage error",
+      "description": "Inverter DC voltage error."
+    },
+    "42": {
+      "title": "Firmware version mismatch (parallel)",
+      "description": "Inconsistent system firmware version in parallel mode."
+    },
+    "43": {
+      "title": "Parallel cable connection error",
+      "description": "Parallel line connection error in parallel mode."
+    },
+    "44": {
+      "title": "Serial number error",
+      "description": "No serial number set at factory."
+    },
+    "45": {
+      "title": "Split-phase mode setting error",
+      "description": "Item \"Parallel\" setting error."
+    },
+    "49": {
+      "title": "Grid over-voltage",
+      "description": "Grid fault; limits depend on the selected grid standard."
+    },
+    "50": {
+      "title": "Grid under-voltage",
+      "description": "Grid fault; limits depend on the selected grid standard."
+    },
+    "51": {
+      "title": "Grid over-frequency",
+      "description": "Grid fault; limits depend on the selected grid standard."
+    },
+    "52": {
+      "title": "Grid under-frequency",
+      "description": "Grid fault; limits depend on the selected grid standard."
+    },
+    "53": {
+      "title": "Grid loss",
+      "description": "Grid fault; limits depend on the selected grid standard."
+    },
+    "54": {
+      "title": "Grid DC current too high",
+      "description": "Grid fault; limits depend on the selected grid standard."
+    },
+    "55": {
+      "title": "Grid standard not initialized",
+      "description": "Grid fault; limits depend on the selected grid standard."
+    },
+    "56": {
+      "title": "Low insulation resistance",
+      "description": "PV1+, PV2+ and PV- abnormally low impedance to ground."
+    },
+    "57": {
+      "title": "Leakage current overload",
+      "description": "System leakage current exceeds limit."
+    },
+    "58": {
+      "title": "BMS communication error",
+      "description": "Check whether the communication line is connected correctly and whether [33] is set to the corresponding lithium battery communication protocol."
+    },
+    "60": {
+      "title": "BMS: low battery temperature",
+      "description": "BMS alarm battery low temperature."
+    },
+    "61": {
+      "title": "BMS: battery over-temperature",
+      "description": "BMS alarm battery over temperature."
+    },
+    "62": {
+      "title": "BMS: battery overcurrent",
+      "description": "BMS alarm battery over current."
+    },
+    "63": {
+      "title": "BMS: battery undervoltage",
+      "description": "BMS alarm low battery."
+    }
+  }
+}

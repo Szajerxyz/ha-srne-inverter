@@ -1,0 +1,66 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Falownik SRNE",
+        "description": "Podaj adres konwertera RS485 na Ethernet (Waveshare w trybie Modbus TCP <-> RTU).",
+        "data": {
+          "name": "Nazwa falownika",
+          "host": "Adres IP konwertera",
+          "port": "Port",
+          "slave": "ID urządzenia Modbus (slave)",
+          "scan_interval": "Interwał odczytu (s)",
+          "password": "Hasło falownika dla automatyzacji (opcjonalne)"
+        },
+        "data_description": {
+          "password": "Zostaw puste, aby nie przechowywać hasła w integracji. Hasło do ustawień wpisujesz wtedy przy odblokowaniu (encja „Blokada ustawień”) i jest trzymane tylko w pamięci. Zapisy z automatyzacji wymagają wtedy wcześniejszego odblokowania."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nie można połączyć się z falownikiem",
+      "invalid_password": "Hasło musi składać się wyłącznie z cyfr (0-65535)"
+    },
+    "abort": {
+      "already_configured": "Ten falownik jest już skonfigurowany"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Interwał odczytu (s)",
+          "password": "Hasło falownika dla automatyzacji (opcjonalne)",
+          "lock_minutes": "Czas odblokowania (minuty)"
+        },
+        "data_description": {
+          "password": "Zostaw puste, aby nie przechowywać hasła w integracji. Hasło do ustawień wpisujesz wtedy przy odblokowaniu (encja „Blokada ustawień”) i jest trzymane tylko w pamięci. Zapisy z automatyzacji wymagają wtedy wcześniejszego odblokowania.",
+          "lock_minutes": "Po tym czasie ustawienia blokują się ponownie, a hasło jest usuwane z pamięci (domyślnie 10)."
+        }
+      }
+    },
+    "error": {
+      "invalid_password": "Hasło musi składać się wyłącznie z cyfr (0-65535)"
+    }
+  },
+  "services": {
+    "read_registers": {
+      "name": "Odczyt rejestrów",
+      "description": "Odczytuje zakres rejestrów falownika (diagnostyka). Wynik widać w Narzędziach deweloperskich → Akcje.",
+      "fields": {
+        "start": {
+          "name": "Adres początkowy",
+          "description": "Dziesiętnie (57399) lub szesnastkowo (0xE037)."
+        },
+        "count": {
+          "name": "Liczba rejestrów",
+          "description": "1-128."
+        },
+        "config_entry_id": {
+          "name": "Falownik",
+          "description": "Wymagane tylko przy kilku falownikach."
+        }
+      }
+    }
+  }
+}

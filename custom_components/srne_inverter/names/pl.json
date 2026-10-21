@@ -1,0 +1,527 @@
+{
+  "prefix": "SRNE",
+  "groups": {
+    "info": "Informacje",
+    "grid": "Sieć i wyjście",
+    "pv": "PV i szyna DC",
+    "battery": "Magazyn",
+    "energy": "Energia",
+    "schedule": "Harmonogram",
+    "mode": "Tryb pracy",
+    "battery_settings": "Ustawienia baterii",
+    "grid_settings": "Ustawienia sieci"
+  },
+  "common": {
+    "unknown": "Nieznany",
+    "none": "Brak"
+  },
+  "entities": {
+    "restart": "Restart falownika",
+    "settings_lock": "Blokada ustawień",
+    "serial_number": "Numer seryjny (SN)",
+    "firmware_build_time": "Data kompilacji oprogramowania",
+    "mcu1_version": "Wersja oprogramowania MCU1",
+    "mcu2_version": "Wersja oprogramowania MCU2",
+    "lcd_version": "Wersja oprogramowania LCD",
+    "minor_version": "Wersja mniejsza",
+    "hw_control_version": "Wersja sprzętowa panelu sterowania",
+    "hw_power_version": "Wersja sprzętowa płyty mocy",
+    "protocol_version": "Wersja protokołu Modbus",
+    "battery_type": "Typ baterii",
+    "bms_protocol": "Protokół komunikacji BMS",
+    "rs485_address": "Adres RS485",
+    "temp_dcdc": "Temperatura radiatora DC-DC (PV)",
+    "temp_dcac": "Temperatura radiatora DC-AC (falownik)",
+    "temp_transformer": "Temperatura transformatora",
+    "temp_ambient": "Temperatura otoczenia (na zewnątrz)",
+    "machine_state": "Stan pracy falownika",
+    "fault_codes": "Kody błędów",
+    "fault_description": "Opis błędów falownika",
+    "fault_active": "Błąd falownika",
+    "pv1_voltage": "Napięcie PV1",
+    "pv1_current": "Prąd PV1",
+    "pv1_power": "Moc PV1",
+    "pv2_voltage": "Napięcie PV2",
+    "pv2_current": "Prąd PV2",
+    "pv2_power": "Moc PV2",
+    "pv_power_total": "Moc PV łącznie",
+    "pv_voltage": "Napięcie szyny DC łącznie",
+    "bus_positive_voltage": "Napięcie dodatniej szyny DC",
+    "bus_negative_voltage": "Napięcie ujemnej szyny DC",
+    "battery_soc": "Stan naładowania baterii (SOC)",
+    "battery_voltage": "Napięcie baterii",
+    "battery_current": "Prąd baterii (+ rozładowanie / − ładowanie)",
+    "battery_power": "Moc baterii (+ rozładowanie / − ładowanie)",
+    "battery_temp": "Temperatura baterii",
+    "pvac_power": "Moc ładowania (PV + AC)",
+    "charge_state": "Stan ładowania",
+    "battery_soh": "Stan zdrowia baterii (SOH)",
+    "battery_rated_capacity": "Pojemność znamionowa baterii",
+    "battery_remaining_capacity": "Pozostała pojemność baterii",
+    "battery_cycles": "Liczba cykli baterii",
+    "bms_voltage": "BMS: napięcie baterii",
+    "bms_current": "BMS: prąd baterii",
+    "bms_temp": "BMS: temperatura baterii",
+    "bms_charge_limit_voltage": "BMS: napięcie ładowania (limit)",
+    "bms_charge_limit_current": "BMS: prąd ładowania (limit)",
+    "bms_discharge_limit_current": "BMS: prąd rozładowania (limit)",
+    "bms_alarm_1": "BMS: alarmy 1",
+    "bms_alarm_2": "BMS: alarmy 2",
+    "bms_protection_1": "BMS: ochrona 1",
+    "bms_protection_2": "BMS: ochrona 2",
+    "bms_alarm": "BMS: alarm",
+    "bms_protection": "BMS: ochrona aktywna",
+    "battery_charge_today_kwh": "Energia ładowania baterii dziś",
+    "battery_discharge_today_kwh": "Energia rozładowania baterii dziś",
+    "battery_charge_today_ah": "Ładowanie baterii dziś (Ah)",
+    "battery_discharge_today_ah": "Rozładowanie baterii dziś (Ah)",
+    "battery_charge_total_ah": "Ładowanie baterii łącznie (Ah)",
+    "battery_discharge_total_ah": "Rozładowanie baterii łącznie (Ah)",
+    "battery_grid_charge_today_ah": "Ładowanie z sieci dziś (Ah)",
+    "battery_grid_charge_total_ah": "Ładowanie z sieci łącznie (Ah)",
+    "grid_freq": "Częstotliwość sieci",
+    "output_freq": "Częstotliwość wyjściowa falownika",
+    "grid_power_total": "Moc czynna sieci łącznie (+ oddawanie / − pobór)",
+    "load_power_total": "Moc czynna odbiorów łącznie",
+    "home_power_total": "Moc czynna odbiorów domowych łącznie",
+    "second_power_total": "Moc czynna odbiorów dodatkowych łącznie",
+    "grid_l1_voltage": "Napięcie sieci L1",
+    "grid_l1_current": "Prąd sieci L1",
+    "grid_l1_active_power": "Moc czynna sieci L1 (+ oddawanie / − pobór)",
+    "grid_l1_apparent": "Moc pozorna sieci L1",
+    "output_l1_voltage": "Napięcie wyjściowe falownika L1",
+    "output_l1_current": "Prąd wyjściowy falownika L1",
+    "load_l1_current": "Prąd odbiorów L1",
+    "load_l1_power": "Moc czynna odbiorów L1",
+    "load_l1_apparent": "Moc pozorna odbiorów L1",
+    "home_l1_power": "Moc czynna odbiorów domowych L1",
+    "second_l1_power": "Moc czynna odbiorów dodatkowych L1",
+    "grid_l2_voltage": "Napięcie sieci L2",
+    "grid_l2_current": "Prąd sieci L2",
+    "grid_l2_active_power": "Moc czynna sieci L2 (+ oddawanie / − pobór)",
+    "grid_l2_apparent": "Moc pozorna sieci L2",
+    "output_l2_voltage": "Napięcie wyjściowe falownika L2",
+    "output_l2_current": "Prąd wyjściowy falownika L2",
+    "load_l2_current": "Prąd odbiorów L2",
+    "load_l2_power": "Moc czynna odbiorów L2",
+    "load_l2_apparent": "Moc pozorna odbiorów L2",
+    "home_l2_power": "Moc czynna odbiorów domowych L2",
+    "second_l2_power": "Moc czynna odbiorów dodatkowych L2",
+    "grid_l3_voltage": "Napięcie sieci L3",
+    "grid_l3_current": "Prąd sieci L3",
+    "grid_l3_active_power": "Moc czynna sieci L3 (+ oddawanie / − pobór)",
+    "grid_l3_apparent": "Moc pozorna sieci L3",
+    "output_l3_voltage": "Napięcie wyjściowe falownika L3",
+    "output_l3_current": "Prąd wyjściowy falownika L3",
+    "load_l3_current": "Prąd odbiorów L3",
+    "load_l3_power": "Moc czynna odbiorów L3",
+    "load_l3_apparent": "Moc pozorna odbiorów L3",
+    "home_l3_power": "Moc czynna odbiorów domowych L3",
+    "second_l3_power": "Moc czynna odbiorów dodatkowych L3",
+    "energy_pv_today": "Produkcja PV dziś",
+    "energy_pv_total": "Produkcja PV łącznie",
+    "energy_export_today": "Energia oddana do sieci dziś",
+    "energy_export_total": "Energia oddana do sieci łącznie",
+    "energy_import_today": "Energia pobrana z sieci przez odbiory dziś",
+    "energy_import_total": "Energia pobrana z sieci przez odbiory łącznie",
+    "energy_load_today": "Zużycie energii przez odbiory dziś",
+    "energy_load_total": "Zużycie energii przez odbiory łącznie",
+    "grid_charge_enable": "Ładowanie czasowe włączone",
+    "discharge_enable": "Rozładowanie czasowe włączone",
+    "grid_charge_start_1": "Ładowanie czasowe 1: początek",
+    "grid_charge_stop_1": "Ładowanie czasowe 1: koniec",
+    "discharge_start_1": "Rozładowanie czasowe 1: początek",
+    "discharge_stop_1": "Rozładowanie czasowe 1: koniec",
+    "grid_charge_soc_end_1": "Ładowanie czasowe 1: stop SOC",
+    "charge_stop_volt_1": "Ładowanie czasowe 1: stop napięcie",
+    "grid_charge_power_1": "Ładowanie czasowe 1: maks. moc",
+    "discharge_stop_soc_1": "Rozładowanie czasowe 1: stop SOC",
+    "discharge_stop_volt_1": "Rozładowanie czasowe 1: stop napięcie",
+    "discharge_max_power_1": "Rozładowanie czasowe 1: maks. moc",
+    "charge_grid_1": "Ładowanie czasowe 1: z sieci",
+    "charge_gen_1": "Ładowanie czasowe 1: z generatora",
+    "charge_start_2": "Ładowanie czasowe 2: początek",
+    "charge_stop_2": "Ładowanie czasowe 2: koniec",
+    "discharge_start_2": "Rozładowanie czasowe 2: początek",
+    "discharge_stop_2": "Rozładowanie czasowe 2: koniec",
+    "charge_stop_soc_2": "Ładowanie czasowe 2: stop SOC",
+    "charge_stop_volt_2": "Ładowanie czasowe 2: stop napięcie",
+    "charge_max_power_2": "Ładowanie czasowe 2: maks. moc",
+    "discharge_stop_soc_2": "Rozładowanie czasowe 2: stop SOC",
+    "discharge_stop_volt_2": "Rozładowanie czasowe 2: stop napięcie",
+    "discharge_max_power_2": "Rozładowanie czasowe 2: maks. moc",
+    "charge_grid_2": "Ładowanie czasowe 2: z sieci",
+    "charge_gen_2": "Ładowanie czasowe 2: z generatora",
+    "charge_start_3": "Ładowanie czasowe 3: początek",
+    "charge_stop_3": "Ładowanie czasowe 3: koniec",
+    "discharge_start_3": "Rozładowanie czasowe 3: początek",
+    "discharge_stop_3": "Rozładowanie czasowe 3: koniec",
+    "charge_stop_soc_3": "Ładowanie czasowe 3: stop SOC",
+    "charge_stop_volt_3": "Ładowanie czasowe 3: stop napięcie",
+    "charge_max_power_3": "Ładowanie czasowe 3: maks. moc",
+    "discharge_stop_soc_3": "Rozładowanie czasowe 3: stop SOC",
+    "discharge_stop_volt_3": "Rozładowanie czasowe 3: stop napięcie",
+    "discharge_max_power_3": "Rozładowanie czasowe 3: maks. moc",
+    "charge_grid_3": "Ładowanie czasowe 3: z sieci",
+    "charge_gen_3": "Ładowanie czasowe 3: z generatora",
+    "week_day_0": "Harmonogram: poniedziałek",
+    "week_day_1": "Harmonogram: wtorek",
+    "week_day_2": "Harmonogram: środa",
+    "week_day_3": "Harmonogram: czwartek",
+    "week_day_4": "Harmonogram: piątek",
+    "week_day_5": "Harmonogram: sobota",
+    "week_day_6": "Harmonogram: niedziela",
+    "priority_mode": "Zarządzanie energią PV (priorytet)",
+    "grid_mode": "Tryb sieci hybrydowy",
+    "battery_mode": "Zarządzanie energią baterii",
+    "grid_charge_allow": "Włącz ładowanie sieciowe",
+    "inverter_charge_current": "Maks. prąd ładowania",
+    "grid_charge_current_max": "Maks. prąd ładowania z sieci",
+    "stop_charge_current": "Prąd zatrzymania ładowania",
+    "limit_max_charge": "SOC zatrzymania ładowania",
+    "discharge_max_current": "Maks. prąd rozładowania baterii",
+    "discharge_start_voltage": "Napięcie rozpoczęcia rozładowania baterii",
+    "limit_discharge_sbu": "SOC zatrzymania rozładowania (przejście na sieć)",
+    "limit_recharge": "SOC ponownego rozładowania (powrót na baterię)",
+    "low_soc_alarm": "Alarm niskiej pojemności baterii (SOC)",
+    "limit_discharge_offgrid": "Błąd niskiego SOC baterii (odcięcie rozładowania)",
+    "low_voltage_delay": "Opóźnienie błędu niskiego napięcia baterii",
+    "discharge_stop_voltage": "Napięcie zatrzymania rozładowania baterii",
+    "charge_max_voltage": "Maks. napięcie ładowania",
+    "recharge_voltage": "Napięcie ponownego ładowania baterii",
+    "low_voltage_recovery": "Regeneracja baterii po niskim napięciu",
+    "low_voltage_alarm": "Alarm niskiego poziomu napięcia baterii",
+    "low_voltage_error": "Błąd niskiego napięcia baterii",
+    "bms_charge_limit_mode": "Tryb ograniczenia prądu ładowania BMS",
+    "bms_comm": "Komunikacja BMS",
+    "temp_compensation": "Korekta temperaturowa prądu ładowania",
+    "grid_sell_max_power": "Maks. moc sprzedaży",
+    "grid_import_max_power": "Maks. moc importu",
+    "ct_ratio": "Współczynnik zewnętrznego CT",
+    "zero_export_power": "Moc zero-eksportu",
+    "reactive_power": "Moc bierna (+ nadwzbudzenie / − niedowzbudzenie)",
+    "power_factor": "Współczynnik mocy PF (+ nadwzbudzenie / − niedowzbudzenie)",
+    "grid_standard": "Standard sieci",
+    "grid_frequency_setting": "Częstotliwość sieci (ustawienie)"
+  },
+  "options": {
+    "machine_state": {
+      "initialization": "Inicjalizacja",
+      "standby": "Czuwanie",
+      "grid_operation": "Praca z sieci",
+      "inverter_operation": "Praca z falownika"
+    },
+    "charge_state": {
+      "off": "Wyłączone",
+      "quick": "Szybkie ładowanie",
+      "constant_voltage": "Stałe napięcie",
+      "float": "Podtrzymanie (float)",
+      "li_activation": "Aktywacja baterii Li",
+      "full": "Naładowana"
+    },
+    "battery_type": {
+      "user_defined": "Własny",
+      "sld": "SLD",
+      "fld": "FLD",
+      "gel": "GEL",
+      "lfp14": "LFP14",
+      "lfp15": "LFP15",
+      "lfp16": "LFP16",
+      "lfp7": "LFP7",
+      "lfp8": "LFP8",
+      "lfp9": "LFP9",
+      "nc7": "NC7",
+      "nc8": "NC8",
+      "nc13": "NC13",
+      "nc14": "NC14",
+      "no_battery": "Brak baterii"
+    },
+    "bms_protocol": {
+      "uze": "UZE",
+      "pyl_can": "PYL_CAN",
+      "sgp": "SGP",
+      "gsl": "GSL",
+      "dey": "DEY",
+      "honghe": "HONGHE"
+    },
+    "grid_standard": {
+      "en_50549_1": "Europa: EN 50549-1"
+    },
+    "priority_mode": {
+      "load_priority": "Priorytet obciążenie",
+      "charge_priority": "Priorytet ładowanie",
+      "grid_priority": "Priorytet do sieci"
+    },
+    "grid_mode": {
+      "grid_connected": "W sieci",
+      "limit_ups_load": "Ogranicz moc do obciąż. UPS",
+      "limit_home_load": "Ogranicz moc do obciąż. Home",
+      "grid_side_coupling": "Sprzęganie po stronie Grid"
+    },
+    "battery_mode": {
+      "standby": "Tryb czuwania",
+      "supply_ups_loads": "Zasilanie odbiorników UPS",
+      "supply_home_loads": "Zasilanie odbiorników Home",
+      "sell_to_grid": "Sprzedaż do sieci"
+    },
+    "bms_charge_limit_mode": {
+      "hmi_settings": "Ustawienia HMI",
+      "bms_protocol": "Protokół BMS",
+      "inverter_logic": "Logika falownika"
+    },
+    "bms_comm": {
+      "off": "Wyłącz",
+      "rs485": "RS485",
+      "can": "CAN"
+    }
+  },
+  "faults": {
+    "1": {
+      "title": "Alarm niskiego napięcia baterii",
+      "description": "Alarm niskiego napięcia baterii (wyjście nie jest wyłączane).",
+      "remedy": "Naładuj baterię i poczekaj, aż napięcie baterii przekroczy wartość ustawioną w parametrze [14]."
+    },
+    "2": {
+      "title": "Przekroczony prąd rozładowania baterii (programowo)",
+      "description": "Przekroczenie średniego prądu rozładowania baterii (zabezpieczenie programowe)."
+    },
+    "3": {
+      "title": "Bateria niepodłączona",
+      "description": "Alarm braku połączenia z baterią.",
+      "remedy": "Sprawdź, czy bateria jest pewnie podłączona, oraz wyłącznik baterii. Upewnij się, że BMS może prawidłowo się komunikować."
+    },
+    "4": {
+      "title": "Zatrzymano rozładowanie (niskie napięcie baterii)",
+      "description": "Alarm zatrzymania rozładowania z powodu zbyt niskiego napięcia baterii.",
+      "remedy": "Reset ręczny: wyłącz i uruchom ponownie. Reset automatyczny: naładuj baterię tak, aby jej napięcie przekroczyło wartość z parametru [35]."
+    },
+    "5": {
+      "title": "Przetężenie baterii (sprzętowo)",
+      "description": "Przetężenie baterii (zabezpieczenie sprzętowe)."
+    },
+    "6": {
+      "title": "Przepięcie podczas ładowania",
+      "description": "Zabezpieczenie przed przepięciem podczas ładowania.",
+      "remedy": "Wyłącz zasilanie i uruchom ponownie. Sprawdź, czy napięcie baterii nie przekracza limitu; jeśli tak, rozładuj baterię poniżej punktu powrotu po przepięciu."
+    },
+    "7": {
+      "title": "Przepięcie szyny DC (sprzętowo)",
+      "description": "Przepięcie szyny DC (zabezpieczenie sprzętowe)."
+    },
+    "8": {
+      "title": "Przepięcie szyny DC (programowo)",
+      "description": "Przepięcie szyny DC (zabezpieczenie programowe)."
+    },
+    "9": {
+      "title": "Przepięcie PV",
+      "description": "Zabezpieczenie przed przepięciem PV."
+    },
+    "10": {
+      "title": "Przetężenie przetwornicy PV (programowo)",
+      "description": "Przetężenie przetwornicy podwyższającej (zabezpieczenie programowe)."
+    },
+    "11": {
+      "title": "Przetężenie przetwornicy PV (sprzętowo)",
+      "description": "Przetężenie przetwornicy podwyższającej (zabezpieczenie sprzętowe)."
+    },
+    "12": {
+      "title": "Błąd komunikacji SPI",
+      "description": "Błąd komunikacji SPI między układem głównym i podrzędnym."
+    },
+    "13": {
+      "title": "Przeciążenie bypassu",
+      "description": "Zabezpieczenie przed przeciążeniem bypassu.",
+      "remedy": "Zmniejsz moc odbiorów i uruchom urządzenie ponownie (patrz pozycja 11 funkcji zabezpieczeń)."
+    },
+    "14": {
+      "title": "Przeciążenie falownika",
+      "description": "Zabezpieczenie przed przeciążeniem falownika.",
+      "remedy": "Zmniejsz moc odbiorów i uruchom urządzenie ponownie (patrz pozycja 11 funkcji zabezpieczeń)."
+    },
+    "15": {
+      "title": "Przetężenie falownika (sprzętowo)",
+      "description": "Przetężenie falownika (zabezpieczenie sprzętowe)."
+    },
+    "16": {
+      "title": "Żądanie wyłączenia przez układ podrzędny",
+      "description": "Błąd: żądanie wyłączenia przez układ podrzędny."
+    },
+    "17": {
+      "title": "Zwarcie na wyjściu falownika",
+      "description": "Zabezpieczenie przed zwarciem falownika."
+    },
+    "18": {
+      "title": "Błąd łagodnego startu szyny DC",
+      "description": "Błąd łagodnego startu szyny DC."
+    },
+    "19": {
+      "title": "Przegrzanie radiatora PV",
+      "description": "Zabezpieczenie przed przegrzaniem radiatora przetwornicy obniżającej (PV).",
+      "remedy": "Normalna praca wraca po ostygnięciu radiatora poniżej temperatury powrotu (błąd przy ponad 90 °C przez 3 s)."
+    },
+    "20": {
+      "title": "Przegrzanie radiatora falownika",
+      "description": "Zabezpieczenie przed przegrzaniem radiatora falownika (wyjście AC z obciążeniem lub ładowanie z sieci).",
+      "remedy": "Normalna praca wraca po ostygnięciu radiatora poniżej temperatury powrotu (błąd przy ponad 90 °C przez 3 s)."
+    },
+    "21": {
+      "title": "Awaria wentylatora",
+      "description": "Zablokowany lub uszkodzony wentylator.",
+      "remedy": "Po wyłączeniu zasilania ręcznie obróć wentylator i sprawdź, czy nie blokuje go ciało obce."
+    },
+    "22": {
+      "title": "Awaria pamięci (EEPROM)",
+      "description": "Awaria pamięci."
+    },
+    "23": {
+      "title": "Błąd ustawienia modelu",
+      "description": "Błąd ustawienia modelu falownika."
+    },
+    "24": {
+      "title": "Asymetria napięć szyn DC",
+      "description": "Niezrównoważone napięcia dodatniej i ujemnej szyny DC."
+    },
+    "25": {
+      "title": "Zwarcie szyny DC",
+      "description": "Zwarcie szyny DC."
+    },
+    "26": {
+      "title": "Napięcie z falownika na wejściu bypass",
+      "description": "Napięcie AC z falownika wraca na wejście AC bypass (przylepiony przekaźnik).",
+      "remedy": "Wyłącz i uruchom urządzenie ponownie; jeśli błąd wróci, skontaktuj się z serwisem."
+    },
+    "27": {
+      "title": "Brak fazy na wejściu sieci",
+      "description": "Brak fazy na wejściu sieci."
+    },
+    "28": {
+      "title": "Błąd fazy na wejściu sieci",
+      "description": "Błąd fazy na wejściu sieci.",
+      "remedy": "Upewnij się, że faza wejścia AC jest taka sama jak faza wyjścia AC."
+    },
+    "29": {
+      "title": "Awaria wewnętrznego układu podwyższającego",
+      "description": "Awaria wewnętrznego układu podwyższającego napięcie baterii."
+    },
+    "30": {
+      "title": "Niska pojemność baterii (poniżej 10%)",
+      "description": "Alarm przy pojemności baterii poniżej 10% (wymaga włączonej komunikacji BMS)."
+    },
+    "31": {
+      "title": "Niska pojemność baterii (poniżej 5%)",
+      "description": "Alarm przy pojemności baterii poniżej 5% (wymaga włączonej komunikacji BMS)."
+    },
+    "32": {
+      "title": "Wyłączenie: niska pojemność baterii",
+      "description": "Falownik wyłącza się przy niskiej pojemności baterii (wymaga włączonej komunikacji BMS)."
+    },
+    "33": {
+      "title": "Błąd CAN sterowania (praca równoległa)",
+      "description": "Błąd CAN sterowania w pracy równoległej."
+    },
+    "34": {
+      "title": "Błąd komunikacji CAN (praca równoległa)",
+      "description": "Błąd komunikacji CAN w pracy równoległej."
+    },
+    "35": {
+      "title": "Błąd ID pracy równoległej",
+      "description": "Błąd ustawienia ID (adresu komunikacji) pracy równoległej."
+    },
+    "36": {
+      "title": "Przetężenie mostka balansującego",
+      "description": "Awaria: przetężenie ramienia mostka balansującego."
+    },
+    "37": {
+      "title": "Błąd rozdziału prądu (praca równoległa)",
+      "description": "Błąd rozdziału prądu w pracy równoległej."
+    },
+    "38": {
+      "title": "Różnica napięć baterii (praca równoległa)",
+      "description": "Duża różnica napięć baterii w pracy równoległej."
+    },
+    "39": {
+      "title": "Niezgodne źródło AC (praca równoległa)",
+      "description": "Niespójne źródło wejściowe AC w pracy równoległej."
+    },
+    "40": {
+      "title": "Błąd synchronizacji sprzętowej (praca równoległa)",
+      "description": "Błąd sprzętowego sygnału synchronizacji w pracy równoległej."
+    },
+    "41": {
+      "title": "Błąd napięcia DC falownika",
+      "description": "Błąd napięcia DC falownika."
+    },
+    "42": {
+      "title": "Różne wersje oprogramowania (praca równoległa)",
+      "description": "Niespójna wersja oprogramowania systemu w pracy równoległej."
+    },
+    "43": {
+      "title": "Błąd połączenia kabla równoległego",
+      "description": "Błąd połączenia linii równoległej w pracy równoległej."
+    },
+    "44": {
+      "title": "Błąd numeru seryjnego",
+      "description": "Nie ustawiono numeru seryjnego w fabryce."
+    },
+    "45": {
+      "title": "Błąd ustawienia trybu split-phase",
+      "description": "Błąd ustawienia pozycji „Parallel”."
+    },
+    "49": {
+      "title": "Przepięcie sieci",
+      "description": "Błąd sieci; progi zależą od wybranego standardu sieci."
+    },
+    "50": {
+      "title": "Zbyt niskie napięcie sieci",
+      "description": "Błąd sieci; progi zależą od wybranego standardu sieci."
+    },
+    "51": {
+      "title": "Zbyt wysoka częstotliwość sieci",
+      "description": "Błąd sieci; progi zależą od wybranego standardu sieci."
+    },
+    "52": {
+      "title": "Zbyt niska częstotliwość sieci",
+      "description": "Błąd sieci; progi zależą od wybranego standardu sieci."
+    },
+    "53": {
+      "title": "Zanik sieci",
+      "description": "Błąd sieci; progi zależą od wybranego standardu sieci."
+    },
+    "54": {
+      "title": "Zbyt duży prąd stały w sieci",
+      "description": "Błąd sieci; progi zależą od wybranego standardu sieci."
+    },
+    "55": {
+      "title": "Nie zainicjowano standardu sieci",
+      "description": "Błąd sieci; progi zależą od wybranego standardu sieci."
+    },
+    "56": {
+      "title": "Niska rezystancja izolacji",
+      "description": "Nieprawidłowo niska impedancja PV1+, PV2+ i PV- względem ziemi."
+    },
+    "57": {
+      "title": "Przekroczony prąd upływu",
+      "description": "Prąd upływu w systemie przekracza limit."
+    },
+    "58": {
+      "title": "Błąd komunikacji z BMS",
+      "description": "Sprawdź, czy przewód komunikacyjny jest poprawnie podłączony i czy pozycja [33] ma ustawiony właściwy protokół baterii litowej."
+    },
+    "60": {
+      "title": "BMS: niska temperatura baterii",
+      "description": "Alarm BMS: niska temperatura baterii."
+    },
+    "61": {
+      "title": "BMS: przegrzanie baterii",
+      "description": "Alarm BMS: zbyt wysoka temperatura baterii."
+    },
+    "62": {
+      "title": "BMS: przetężenie baterii",
+      "description": "Alarm BMS: przetężenie baterii."
+    },
+    "63": {
+      "title": "BMS: niskie napięcie baterii",
+      "description": "Alarm BMS: niskie napięcie baterii."
+    }
+  }
+}

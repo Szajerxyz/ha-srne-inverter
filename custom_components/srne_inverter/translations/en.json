@@ -1,0 +1,66 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SRNE inverter",
+        "description": "Enter the address of the RS485-to-Ethernet converter (Waveshare in Modbus TCP <-> RTU mode).",
+        "data": {
+          "name": "Inverter name",
+          "host": "Converter IP address",
+          "port": "Port",
+          "slave": "Modbus device ID (slave)",
+          "scan_interval": "Polling interval (s)",
+          "password": "Inverter password for automations (optional)"
+        },
+        "data_description": {
+          "password": "Leave empty to avoid storing the password. You then enter it when unlocking (the 'Settings lock' entity) and it is kept in memory only. Writes from automations then require the settings to be unlocked first."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the inverter",
+      "invalid_password": "The password must contain digits only (0-65535)"
+    },
+    "abort": {
+      "already_configured": "This inverter is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Polling interval (s)",
+          "password": "Inverter password for automations (optional)",
+          "lock_minutes": "Unlock time (minutes)"
+        },
+        "data_description": {
+          "password": "Leave empty to avoid storing the password. You then enter it when unlocking (the 'Settings lock' entity) and it is kept in memory only. Writes from automations then require the settings to be unlocked first.",
+          "lock_minutes": "After this time the settings lock again and the password is removed from memory (default 10)."
+        }
+      }
+    },
+    "error": {
+      "invalid_password": "The password must contain digits only (0-65535)"
+    }
+  },
+  "services": {
+    "read_registers": {
+      "name": "Read registers",
+      "description": "Reads a range of inverter registers (diagnostics). The result is shown in Developer tools → Actions.",
+      "fields": {
+        "start": {
+          "name": "Start address",
+          "description": "Decimal (57399) or hex (0xE037)."
+        },
+        "count": {
+          "name": "Register count",
+          "description": "1-128."
+        },
+        "config_entry_id": {
+          "name": "Inverter",
+          "description": "Only needed with several inverters."
+        }
+      }
+    }
+  }
+}
