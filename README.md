@@ -1,6 +1,6 @@
-# SRNE Inverter – integracja Home Assistant (Modbus TCP)
+# SRNE Inverter – integracja Home Assistant Waveshare RS485 TO ETH (B) (Modbus TCP)
 
-Falownik SRNE HESP48120SH3 jako **jedno urządzenie** w Home Assistant, bez wpisów w `configuration.yaml`.
+Falownik SRNE HESP48120SH3 jako urządzenie w Home Assistant, bez wpisów w `configuration.yaml`.
 Komunikacja: falownik → RS485 → Waveshare (tryb **Modbus TCP ↔ RTU**) → Home Assistant.
 
 ## Instalacja przez HACS
@@ -13,7 +13,7 @@ Skopiuj `custom_components/srne_inverter` do `/config/custom_components/`, zrest
 
 
 ## Hasło ustawień zaawansowanych
-Część parametrów (np. SOC rozładowania) falownik pozwala zmieniać dopiero po wpisaniu hasła. Domyślnie integracja **nie przechowuje**
+Część parametrów falownik pozwala zmieniać dopiero po wpisaniu hasła. Domyślnie integracja **nie przechowuje**
 tego hasła – wpisujesz je przy odblokowaniu ustawień (patrz niżej). Jeśli automatyzacje mają zmieniać ustawienia bez odblokowywania,
 wpisz hasło w *Ustawienia → Urządzenia i usługi → SRNE Inverter → Konfiguruj* (jest wtedy przechowywane w konfiguracji HA).
 
@@ -29,3 +29,15 @@ zaawansowanych falownika** (do 5 cyfr).
   automatyzacji” (wtedy jest przechowywane w konfiguracji HA).
 - Po 5 błędnych hasłach z rzędu kolejne próby są wstrzymane na 60 s. Falownik bez ustawionego hasła (wartość 0) akceptuje dowolny kod.
 
+## Pliki srne_lcd_theme oraz dashboard_srne_lcd_widoki zawierają przykład dashbordu dla integracji
+
+# Motyw "SRNE LCD" - ciemny, w stylu ekranu falownika SRNE
+# Instalacja: skopiuj do /config/themes/srne_lcd.yaml, w configuration.yaml dodaj:
+#   frontend:
+#     themes: !include_dir_merge_named themes
+# i wykonaj: Narzędzia deweloperskie -> YAML -> Przeładuj motywy (albo restart HA).
+
+  # ===== SRNE LCD v2: jedna zakładka + podwidoki (PV, Sieć, Magazyn, Odbiory, Falownik z ustawieniami) =====
+  # Wymagane: motyw "SRNE LCD" (srne_lcd_theme.yaml) oraz HACS: button-card, mushroom, apexcharts-card, modern-circular-gauge.
+  # Dopisz na końcu listy `views:` w surowym edytorze konfiguracji (wcięcie 2 spacje).
+  # Podwidoki (subview: true) nie są pokazywane na pasku zakładek - otwiera się je kliknięciem w kafelek.
