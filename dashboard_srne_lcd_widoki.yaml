@@ -1,0 +1,2310 @@
+  # ===== SRNE LCD v2: jedna zakładka + podwidoki (PV, Sieć, Magazyn, Odbiory, Falownik z ustawieniami) =====
+  # Wymagane: motyw "SRNE LCD" (srne_lcd_theme.yaml) oraz HACS: button-card, mushroom, apexcharts-card, modern-circular-gauge.
+  # Dopisz na końcu listy `views:` w surowym edytorze konfiguracji (wcięcie 2 spacje).
+  # Podwidoki (subview: true) nie są pokazywane na pasku zakładek - otwiera się je kliknięciem w kafelek.
+  - title: SRNE LCD
+    path: srne-lcd
+    icon: mdi:solar-power-variant
+    theme: SRNE LCD
+    cards:
+    - type: picture-elements
+      image: data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='340' viewBox='0 0 400 340'%3E%3C/svg%3E
+      elements:
+      - type: custom:button-card
+        entity: sensor.srne_pv_total_power
+        triggers_update:
+        - sensor.srne_battery_power
+        - sensor.srne_grid_total_active_power
+        - sensor.srne_load_total_active_power
+        - sensor.srne_pv_total_power
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          lines: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+            const pv=v('sensor.srne_pv_total_power'),gr=v('sensor.srne_grid_total_active_power'),bp=v('sensor.srne_battery_power'),ld=v('sensor.srne_load_total_active_power');
+            const Y='#ffc107',G='#00e676',O='#ff9800',B='#40c4ff',C='#00e5ff';
+            const dur=(p)=>Math.max(0.35,2.4-Math.min(Math.abs(p),12000)/12000*2.05).toFixed(2);
+            const on=(p)=>p!==null&&Math.abs(p)>30;
+            const ln=(d,p,col,rev)=>'<path class="ln'+(on(p)?'':' off')+'" d="'+d+'" style="stroke:'+col+';'+(on(p)?'animation-duration:'+dur(p)+'s;animation-direction:'+(rev?'reverse':'normal')+';':'')+'"/>';
+            const gc=gr===null?C:(gr>30?G:(gr<-30?O:C));
+            const bc=bp===null?C:(bp<-30?G:(bp>30?O:C));
+            return '<svg class="lines" viewBox="0 0 400 340" preserveAspectRatio="xMidYMid meet">'
+             +ln('M 70 62 C 150 62 140 150 200 170',pv,Y,false)
+             +ln('M 330 62 C 250 62 260 150 200 170',gr,gc,gr!==null&&gr>0)
+             +ln('M 70 278 C 150 278 140 190 200 170',bp,bc,bp!==null&&bp<0)
+             +ln('M 200 170 C 260 190 250 278 330 278',ld,B,false)
+             +'</svg>';
+
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"lines"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: '0'
+          - background: none
+          - border: none
+          - box-shadow: none
+          - overflow: visible
+        extra_styles: |-
+          .lines{display:block;width:100%;}
+          .ln{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:7 9;animation:flow 1s linear infinite;}
+          .ln.off{animation:none;opacity:.15;stroke-dasharray:2 10;}
+          @keyframes flow{to{stroke-dashoffset:-32;}}
+        style:
+          left: 50%
+          top: 50%
+          width: 100%
+          pointer-events: none
+      - type: custom:button-card
+        entity: sensor.srne_pv_total_power
+        triggers_update:
+        - sensor.srne_pv1_power
+        - sensor.srne_pv2_power
+        - sensor.srne_pv_total_power
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          node: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+            const pv=v('sensor.srne_pv_total_power');const on=pv!==null&&pv>30;
+            return '<div class="node'+(on?' active':'')+'" style="--c:#ffc107"><ha-icon icon="mdi:solar-power"></ha-icon><div class="l">PV</div><div class="v">'+f(pv)+' W</div><div class="s">PV1 '+f(v('sensor.srne_pv1_power'))+' W · PV2 '+f(v('sensor.srne_pv2_power'))+' W</div></div>';
+
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"node"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: '0'
+          - background: none
+          - border: none
+          - box-shadow: none
+          - overflow: visible
+        extra_styles: |-
+          @keyframes pulse{0%,100%{box-shadow:0 0 6px var(--c),inset 0 0 6px rgba(0,0,0,.4);}50%{box-shadow:0 0 20px var(--c),inset 0 0 8px rgba(0,0,0,.4);}}
+          @keyframes pulse2{0%,100%{box-shadow:0 0 0 7px var(--cr),0 0 8px var(--c);}50%{box-shadow:0 0 0 7px var(--cr),0 0 22px var(--c);}}
+          @keyframes shine{to{background-position:-200% 0;}}
+          .node{text-align:center;background:rgba(6,18,38,.94);border:1.5px solid var(--c);border-radius:18px;padding:8px 4px;box-shadow:0 0 10px var(--c);}
+          .node.active{animation:pulse 2.4s ease-in-out infinite;}
+          .node ha-icon{--mdc-icon-size:28px;color:var(--c);}
+          .node .l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7fd8ff;opacity:.85;}
+          .node .v{font-size:clamp(14px,4.4vw,22px);font-weight:700;color:#eafaff;text-shadow:0 0 8px var(--c);}
+          .node .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.8;line-height:1.35;}
+          .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin:5px 10px 0;overflow:hidden;}
+          .bar i{display:block;height:100%;border-radius:3px;background:var(--c);}
+          .bar i.chg{background:linear-gradient(90deg,var(--c),#d7ffe6,var(--c));background-size:200% 100%;animation:shine 1.5s linear infinite;}
+          .inv{display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:12px;}
+          .circle{width:76%;aspect-ratio:1/1;border-radius:50%;background:var(--c);box-shadow:0 0 0 7px var(--cr),0 0 10px var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+          .circle.active{animation:pulse2 2.4s ease-in-out infinite;}
+          .sym{display:flex;gap:10px;align-items:center;}
+          .sym svg{height:15px;width:auto;}
+          .sym .dc{fill:#fff;}
+          .sym .ac{fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;}
+          .circle .t{font-size:clamp(8px,2.7vw,12px);font-weight:800;letter-spacing:.05em;color:#fff;}
+          .inv .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.85;line-height:1.35;}
+          .fcode{border:1.5px solid #ff5252;background:rgba(255,82,82,.22);color:#ffd0d0;font-family:'Courier New',monospace;font-weight:800;font-size:clamp(16px,5vw,26px);letter-spacing:.12em;padding:1px 12px;border-radius:4px;text-shadow:0 0 8px #ff5252;}
+        tap_action:
+          action: navigate
+          navigation_path: srne-lcd-pv
+        hold_action:
+          action: more-info
+        style:
+          left: 17.5%
+          top: 18.2%
+          width: 30%
+      - type: custom:button-card
+        entity: sensor.srne_grid_total_active_power
+        triggers_update:
+        - sensor.srne_grid_frequency
+        - sensor.srne_grid_l1_voltage
+        - sensor.srne_grid_total_active_power
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          node: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+            const gr=v('sensor.srne_grid_total_active_power');const c=gr===null?'#00e5ff':(gr>30?'#00e676':(gr<-30?'#ff9800':'#00e5ff'));
+            return '<div class="node'+((gr!==null&&Math.abs(gr)>30)?' active':'')+'" style="--c:'+c+'"><ha-icon icon="mdi:transmission-tower"></ha-icon><div class="l">Sieć</div><div class="v">'+(gr===null?'—':(gr>=0?'↑ ':'↓ ')+Math.abs(gr).toFixed(0)+' W')+'</div><div class="s">'+f(v('sensor.srne_grid_frequency'),2)+' Hz · '+f(v('sensor.srne_grid_l1_voltage'))+' V</div></div>';
+
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"node"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: '0'
+          - background: none
+          - border: none
+          - box-shadow: none
+          - overflow: visible
+        extra_styles: |-
+          @keyframes pulse{0%,100%{box-shadow:0 0 6px var(--c),inset 0 0 6px rgba(0,0,0,.4);}50%{box-shadow:0 0 20px var(--c),inset 0 0 8px rgba(0,0,0,.4);}}
+          @keyframes pulse2{0%,100%{box-shadow:0 0 0 7px var(--cr),0 0 8px var(--c);}50%{box-shadow:0 0 0 7px var(--cr),0 0 22px var(--c);}}
+          @keyframes shine{to{background-position:-200% 0;}}
+          .node{text-align:center;background:rgba(6,18,38,.94);border:1.5px solid var(--c);border-radius:18px;padding:8px 4px;box-shadow:0 0 10px var(--c);}
+          .node.active{animation:pulse 2.4s ease-in-out infinite;}
+          .node ha-icon{--mdc-icon-size:28px;color:var(--c);}
+          .node .l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7fd8ff;opacity:.85;}
+          .node .v{font-size:clamp(14px,4.4vw,22px);font-weight:700;color:#eafaff;text-shadow:0 0 8px var(--c);}
+          .node .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.8;line-height:1.35;}
+          .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin:5px 10px 0;overflow:hidden;}
+          .bar i{display:block;height:100%;border-radius:3px;background:var(--c);}
+          .bar i.chg{background:linear-gradient(90deg,var(--c),#d7ffe6,var(--c));background-size:200% 100%;animation:shine 1.5s linear infinite;}
+          .inv{display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:12px;}
+          .circle{width:76%;aspect-ratio:1/1;border-radius:50%;background:var(--c);box-shadow:0 0 0 7px var(--cr),0 0 10px var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+          .circle.active{animation:pulse2 2.4s ease-in-out infinite;}
+          .sym{display:flex;gap:10px;align-items:center;}
+          .sym svg{height:15px;width:auto;}
+          .sym .dc{fill:#fff;}
+          .sym .ac{fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;}
+          .circle .t{font-size:clamp(8px,2.7vw,12px);font-weight:800;letter-spacing:.05em;color:#fff;}
+          .inv .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.85;line-height:1.35;}
+          .fcode{border:1.5px solid #ff5252;background:rgba(255,82,82,.22);color:#ffd0d0;font-family:'Courier New',monospace;font-weight:800;font-size:clamp(16px,5vw,26px);letter-spacing:.12em;padding:1px 12px;border-radius:4px;text-shadow:0 0 8px #ff5252;}
+        tap_action:
+          action: navigate
+          navigation_path: srne-lcd-grid
+        hold_action:
+          action: more-info
+        style:
+          left: 82.5%
+          top: 18.2%
+          width: 30%
+      - type: custom:button-card
+        entity: sensor.srne_machine_state
+        triggers_update:
+        - binary_sensor.srne_fault_active
+        - sensor.srne_fault_codes
+        - sensor.srne_machine_state
+        - sensor.srne_dcac_heatsink_temperature
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          node: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+            const fault=t('binary_sensor.srne_fault_active')==='on';
+            const c=fault?'#e8315a':'#10c8d4', cr=fault?'rgba(232,49,90,.28)':'rgba(16,200,212,.26)';
+            const codes=fault?t('sensor.srne_fault_codes').split(',').map(x=>x.trim()).filter(x=>/^[0-9]+$/.test(x)).map(x=>x.padStart(2,'0')).join(' '):'';
+            const dc='<svg class="dc" viewBox="0 0 24 14"><rect x="1" y="9.5" width="22" height="3" rx="1"/><rect x="1" y="3" width="5" height="3"/><rect x="9.5" y="3" width="5" height="3"/><rect x="18" y="3" width="5" height="3"/></svg>';
+            const ac='<svg class="ac" viewBox="0 0 26 14"><path d="M2 8 C 6 0, 10 0, 13 7 S 20 14, 24 6"/></svg>';
+            return '<div class="inv" style="--c:'+c+';--cr:'+cr+'"><div class="circle active"><div class="sym">'+dc+ac+'</div><div class="t">INVERTER</div></div>'
+             +(codes?'<div class="fcode">'+codes+'</div>':'')
+             +'<div class="s">'+t('sensor.srne_machine_state')+'<br>'+f(v('sensor.srne_dcac_heatsink_temperature'))+' °C</div></div>';
+
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"node"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: '0'
+          - background: none
+          - border: none
+          - box-shadow: none
+          - overflow: visible
+        extra_styles: |-
+          @keyframes pulse{0%,100%{box-shadow:0 0 6px var(--c),inset 0 0 6px rgba(0,0,0,.4);}50%{box-shadow:0 0 20px var(--c),inset 0 0 8px rgba(0,0,0,.4);}}
+          @keyframes pulse2{0%,100%{box-shadow:0 0 0 7px var(--cr),0 0 8px var(--c);}50%{box-shadow:0 0 0 7px var(--cr),0 0 22px var(--c);}}
+          @keyframes shine{to{background-position:-200% 0;}}
+          .node{text-align:center;background:rgba(6,18,38,.94);border:1.5px solid var(--c);border-radius:18px;padding:8px 4px;box-shadow:0 0 10px var(--c);}
+          .node.active{animation:pulse 2.4s ease-in-out infinite;}
+          .node ha-icon{--mdc-icon-size:28px;color:var(--c);}
+          .node .l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7fd8ff;opacity:.85;}
+          .node .v{font-size:clamp(14px,4.4vw,22px);font-weight:700;color:#eafaff;text-shadow:0 0 8px var(--c);}
+          .node .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.8;line-height:1.35;}
+          .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin:5px 10px 0;overflow:hidden;}
+          .bar i{display:block;height:100%;border-radius:3px;background:var(--c);}
+          .bar i.chg{background:linear-gradient(90deg,var(--c),#d7ffe6,var(--c));background-size:200% 100%;animation:shine 1.5s linear infinite;}
+          .inv{display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:12px;}
+          .circle{width:76%;aspect-ratio:1/1;border-radius:50%;background:var(--c);box-shadow:0 0 0 7px var(--cr),0 0 10px var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+          .circle.active{animation:pulse2 2.4s ease-in-out infinite;}
+          .sym{display:flex;gap:10px;align-items:center;}
+          .sym svg{height:15px;width:auto;}
+          .sym .dc{fill:#fff;}
+          .sym .ac{fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;}
+          .circle .t{font-size:clamp(8px,2.7vw,12px);font-weight:800;letter-spacing:.05em;color:#fff;}
+          .inv .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.85;line-height:1.35;}
+          .fcode{border:1.5px solid #ff5252;background:rgba(255,82,82,.22);color:#ffd0d0;font-family:'Courier New',monospace;font-weight:800;font-size:clamp(16px,5vw,26px);letter-spacing:.12em;padding:1px 12px;border-radius:4px;text-shadow:0 0 8px #ff5252;}
+        tap_action:
+          action: navigate
+          navigation_path: srne-lcd-inverter
+        hold_action:
+          action: more-info
+        style:
+          left: 50%
+          top: 50%
+          width: 34%
+      - type: custom:button-card
+        entity: sensor.srne_battery_power
+        triggers_update:
+        - sensor.srne_battery_power
+        - sensor.srne_battery_soc
+        - sensor.srne_battery_voltage
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          node: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+            const soc=v('sensor.srne_battery_soc'),p=v('sensor.srne_battery_power');
+            const c=p===null?'#00e5ff':(p<-30?'#00e676':(p>30?'#ff9800':'#00e5ff'));
+            const ic=(p!==null&&p<-30)?'mdi:battery-charging':(soc===null?'mdi:battery-unknown':(soc>=95?'mdi:battery':'mdi:battery-'+Math.max(10,Math.round(soc/10)*10)));
+            return '<div class="node'+((p!==null&&Math.abs(p)>30)?' active':'')+'" style="--c:'+c+'"><ha-icon icon="'+ic+'"></ha-icon><div class="l">Magazyn</div><div class="v">'+f(soc)+' %</div><div class="s">'+f(p===null?null:Math.abs(p))+' W · '+f(v('sensor.srne_battery_voltage'),1)+' V</div><div class="bar"><i class="'+((p!==null&&p<-30)?'chg':'')+'" style="width:'+(soc===null?0:soc)+'%"></i></div></div>';
+
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"node"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: '0'
+          - background: none
+          - border: none
+          - box-shadow: none
+          - overflow: visible
+        extra_styles: |-
+          @keyframes pulse{0%,100%{box-shadow:0 0 6px var(--c),inset 0 0 6px rgba(0,0,0,.4);}50%{box-shadow:0 0 20px var(--c),inset 0 0 8px rgba(0,0,0,.4);}}
+          @keyframes pulse2{0%,100%{box-shadow:0 0 0 7px var(--cr),0 0 8px var(--c);}50%{box-shadow:0 0 0 7px var(--cr),0 0 22px var(--c);}}
+          @keyframes shine{to{background-position:-200% 0;}}
+          .node{text-align:center;background:rgba(6,18,38,.94);border:1.5px solid var(--c);border-radius:18px;padding:8px 4px;box-shadow:0 0 10px var(--c);}
+          .node.active{animation:pulse 2.4s ease-in-out infinite;}
+          .node ha-icon{--mdc-icon-size:28px;color:var(--c);}
+          .node .l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7fd8ff;opacity:.85;}
+          .node .v{font-size:clamp(14px,4.4vw,22px);font-weight:700;color:#eafaff;text-shadow:0 0 8px var(--c);}
+          .node .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.8;line-height:1.35;}
+          .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin:5px 10px 0;overflow:hidden;}
+          .bar i{display:block;height:100%;border-radius:3px;background:var(--c);}
+          .bar i.chg{background:linear-gradient(90deg,var(--c),#d7ffe6,var(--c));background-size:200% 100%;animation:shine 1.5s linear infinite;}
+          .inv{display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:12px;}
+          .circle{width:76%;aspect-ratio:1/1;border-radius:50%;background:var(--c);box-shadow:0 0 0 7px var(--cr),0 0 10px var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+          .circle.active{animation:pulse2 2.4s ease-in-out infinite;}
+          .sym{display:flex;gap:10px;align-items:center;}
+          .sym svg{height:15px;width:auto;}
+          .sym .dc{fill:#fff;}
+          .sym .ac{fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;}
+          .circle .t{font-size:clamp(8px,2.7vw,12px);font-weight:800;letter-spacing:.05em;color:#fff;}
+          .inv .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.85;line-height:1.35;}
+          .fcode{border:1.5px solid #ff5252;background:rgba(255,82,82,.22);color:#ffd0d0;font-family:'Courier New',monospace;font-weight:800;font-size:clamp(16px,5vw,26px);letter-spacing:.12em;padding:1px 12px;border-radius:4px;text-shadow:0 0 8px #ff5252;}
+        tap_action:
+          action: navigate
+          navigation_path: srne-lcd-battery
+        hold_action:
+          action: more-info
+        style:
+          left: 17.5%
+          top: 81.8%
+          width: 30%
+      - type: custom:button-card
+        entity: sensor.srne_load_total_active_power
+        triggers_update:
+        - sensor.srne_home_load_total_active_power
+        - sensor.srne_load_total_active_power
+        - sensor.srne_second_load_total_active_power
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          node: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+            const ld=v('sensor.srne_load_total_active_power');
+            return '<div class="node'+((ld!==null&&ld>30)?' active':'')+'" style="--c:#40c4ff"><ha-icon icon="mdi:home-lightning-bolt"></ha-icon><div class="l">Odbiory</div><div class="v">'+f(ld)+' W</div><div class="s">HOME '+f(v('sensor.srne_home_load_total_active_power'))+' W · dod. '+f(v('sensor.srne_second_load_total_active_power'))+' W</div></div>';
+
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"node"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: '0'
+          - background: none
+          - border: none
+          - box-shadow: none
+          - overflow: visible
+        extra_styles: |-
+          @keyframes pulse{0%,100%{box-shadow:0 0 6px var(--c),inset 0 0 6px rgba(0,0,0,.4);}50%{box-shadow:0 0 20px var(--c),inset 0 0 8px rgba(0,0,0,.4);}}
+          @keyframes pulse2{0%,100%{box-shadow:0 0 0 7px var(--cr),0 0 8px var(--c);}50%{box-shadow:0 0 0 7px var(--cr),0 0 22px var(--c);}}
+          @keyframes shine{to{background-position:-200% 0;}}
+          .node{text-align:center;background:rgba(6,18,38,.94);border:1.5px solid var(--c);border-radius:18px;padding:8px 4px;box-shadow:0 0 10px var(--c);}
+          .node.active{animation:pulse 2.4s ease-in-out infinite;}
+          .node ha-icon{--mdc-icon-size:28px;color:var(--c);}
+          .node .l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7fd8ff;opacity:.85;}
+          .node .v{font-size:clamp(14px,4.4vw,22px);font-weight:700;color:#eafaff;text-shadow:0 0 8px var(--c);}
+          .node .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.8;line-height:1.35;}
+          .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin:5px 10px 0;overflow:hidden;}
+          .bar i{display:block;height:100%;border-radius:3px;background:var(--c);}
+          .bar i.chg{background:linear-gradient(90deg,var(--c),#d7ffe6,var(--c));background-size:200% 100%;animation:shine 1.5s linear infinite;}
+          .inv{display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:12px;}
+          .circle{width:76%;aspect-ratio:1/1;border-radius:50%;background:var(--c);box-shadow:0 0 0 7px var(--cr),0 0 10px var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+          .circle.active{animation:pulse2 2.4s ease-in-out infinite;}
+          .sym{display:flex;gap:10px;align-items:center;}
+          .sym svg{height:15px;width:auto;}
+          .sym .dc{fill:#fff;}
+          .sym .ac{fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;}
+          .circle .t{font-size:clamp(8px,2.7vw,12px);font-weight:800;letter-spacing:.05em;color:#fff;}
+          .inv .s{font-size:clamp(9px,2.6vw,11px);color:#b8e6f5;opacity:.85;line-height:1.35;}
+          .fcode{border:1.5px solid #ff5252;background:rgba(255,82,82,.22);color:#ffd0d0;font-family:'Courier New',monospace;font-weight:800;font-size:clamp(16px,5vw,26px);letter-spacing:.12em;padding:1px 12px;border-radius:4px;text-shadow:0 0 8px #ff5252;}
+        tap_action:
+          action: navigate
+          navigation_path: srne-lcd-load
+        hold_action:
+          action: more-info
+        style:
+          left: 82.5%
+          top: 81.8%
+          width: 30%
+    - type: custom:apexcharts-card
+      header:
+        show: true
+        title: Moc (24 h)
+        show_states: true
+        colorize_states: true
+      graph_span: 24h
+      update_interval: 1min
+      chart_type: line
+      apex_config:
+        chart:
+          height: 260
+          background: transparent
+          foreColor: '#9ad7ee'
+        legend:
+          show: true
+        stroke:
+          curve: smooth
+        dataLabels:
+          enabled: false
+        theme:
+          mode: dark
+        grid:
+          borderColor: rgba(0,229,255,0.12)
+      series:
+      - entity: sensor.srne_pv_total_power
+        name: PV
+        type: area
+        color: '#ffc107'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_load_total_active_power
+        name: Odbiory
+        type: line
+        color: '#03a9f4'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_grid_total_active_power
+        name: Sieć (+ oddawanie / − pobór)
+        type: line
+        color: '#4caf50'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_battery_power
+        name: Magazyn (+ rozładowanie / − ładowanie)
+        type: line
+        color: '#ff9800'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      yaxis:
+      - decimals: 0
+        apex_config:
+          title:
+            text: W
+    - type: custom:button-card
+      entity: sensor.srne_pv_generation_today
+      triggers_update:
+      - sensor.srne_battery_charge_energy_today
+      - sensor.srne_battery_discharge_energy_today
+      - sensor.srne_energy_to_grid_today
+      - sensor.srne_load_energy_from_grid_today
+      - sensor.srne_load_energy_today
+      - sensor.srne_pv_generation_today
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["Produkcja PV",'sensor.srne_pv_generation_today'," kWh",1],["Oddane do sieci",'sensor.srne_energy_to_grid_today'," kWh",1],["Pobrane z sieci (odbiory)",'sensor.srne_load_energy_from_grid_today'," kWh",1],["Zużycie",'sensor.srne_load_energy_today'," kWh",1],["Ładowanie magazynu",'sensor.srne_battery_charge_energy_today'," kWh",1],["Rozładowanie magazynu",'sensor.srne_battery_discharge_energy_today'," kWh",1]];return '<div class="lcdp"><div class="ttl">Energia dziś</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+  - title: PV
+    path: srne-lcd-pv
+    icon: mdi:solar-power
+    subview: true
+    back_path: srne-lcd
+    theme: SRNE LCD
+    cards:
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:modern-circular-gauge
+        entity: sensor.srne_pv1_power
+        name: PV1
+        min: 0
+        max: 9000
+        unit: W
+        smooth_segments: true
+        adaptive_icon_color: true
+        gauge_foreground_style:
+          color: adaptive
+        gauge_background_style:
+          width: 2
+          color: adaptive
+        segments:
+        - from: 0
+          color: &id001
+          - 3
+          - 169
+          - 244
+        - from: 1500
+          color: &id002
+          - 76
+          - 175
+          - 80
+        - from: 4500
+          color: &id003
+          - 255
+          - 152
+          - 0
+        secondary:
+          entity: sensor.srne_pv1_voltage
+          unit: V
+          state_size: big
+      - type: custom:modern-circular-gauge
+        entity: sensor.srne_pv2_power
+        name: PV2
+        min: 0
+        max: 9000
+        unit: W
+        smooth_segments: true
+        adaptive_icon_color: true
+        gauge_foreground_style:
+          color: adaptive
+        gauge_background_style:
+          width: 2
+          color: adaptive
+        segments:
+        - from: 0
+          color: *id001
+        - from: 1500
+          color: *id002
+        - from: 4500
+          color: *id003
+        secondary:
+          entity: sensor.srne_pv2_voltage
+          unit: V
+          state_size: big
+    - type: custom:button-card
+      entity: sensor.srne_pv1_voltage
+      triggers_update:
+      - sensor.srne_pv1_current
+      - sensor.srne_pv1_power
+      - sensor.srne_pv1_voltage
+      - sensor.srne_pv2_current
+      - sensor.srne_pv2_power
+      - sensor.srne_pv2_voltage
+      - sensor.srne_pv_total_power
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["PV1 napięcie:",'sensor.srne_pv1_voltage'," V",1],["PV1 prąd:",'sensor.srne_pv1_current'," A",1],["PV1 moc:",'sensor.srne_pv1_power'," W",0],["PV2 napięcie:",'sensor.srne_pv2_voltage'," V",1],["PV2 prąd:",'sensor.srne_pv2_current'," A",1],["PV2 moc:",'sensor.srne_pv2_power'," W",0],["PV łącznie:",'sensor.srne_pv_total_power'," W",0]];return '<div class="lcdp"><div class="ttl">Dane PV</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+    - type: custom:apexcharts-card
+      header:
+        show: true
+        title: Moc PV (24 h)
+        show_states: true
+        colorize_states: true
+      graph_span: 24h
+      update_interval: 1min
+      chart_type: line
+      apex_config:
+        chart:
+          height: 260
+          background: transparent
+          foreColor: '#9ad7ee'
+        legend:
+          show: true
+        stroke:
+          curve: smooth
+        dataLabels:
+          enabled: false
+        theme:
+          mode: dark
+        grid:
+          borderColor: rgba(0,229,255,0.12)
+      series:
+      - entity: sensor.srne_pv1_power
+        name: PV1
+        type: area
+        color: '#ffc107'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_pv2_power
+        name: PV2
+        type: area
+        color: '#ff9800'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_pv_total_power
+        name: PV łącznie
+        type: line
+        color: '#ffffff'
+        stroke_width: 1
+        group_by:
+          func: avg
+          duration: 5min
+      yaxis:
+      - decimals: 0
+        apex_config:
+          title:
+            text: W
+    - type: custom:button-card
+      entity: sensor.srne_pv_generation_today
+      triggers_update:
+      - sensor.srne_pv_generation_today
+      - sensor.srne_pv_generation_total
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["Dziś:",'sensor.srne_pv_generation_today'," kWh",1],["Łącznie:",'sensor.srne_pv_generation_total'," kWh",0]];return '<div class="lcdp"><div class="ttl">Produkcja</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+  - title: Sieć
+    path: srne-lcd-grid
+    icon: mdi:transmission-tower
+    subview: true
+    back_path: srne-lcd
+    theme: SRNE LCD
+    cards:
+    - type: grid
+      columns: 1
+      square: false
+      cards:
+      - type: custom:modern-circular-gauge
+        entity: sensor.srne_grid_total_active_power
+        name: Sieć (+ oddawanie / − pobór)
+        min: -12000
+        max: 12000
+        unit: W
+        smooth_segments: true
+        adaptive_icon_color: true
+        gauge_foreground_style:
+          color: adaptive
+        gauge_background_style:
+          width: 2
+          color: adaptive
+        segments:
+        - from: -12000
+          color: *id003
+        - from: -100
+          color: *id001
+        - from: 100
+          color: *id002
+        needle: true
+    - type: custom:button-card
+      entity: sensor.srne_grid_l1_voltage
+      triggers_update:
+      - sensor.srne_grid_frequency
+      - sensor.srne_grid_l1_active_power
+      - sensor.srne_grid_l1_apparent_power
+      - sensor.srne_grid_l1_current
+      - sensor.srne_grid_l1_voltage
+      - sensor.srne_grid_l2_active_power
+      - sensor.srne_grid_l2_apparent_power
+      - sensor.srne_grid_l2_current
+      - sensor.srne_grid_l2_voltage
+      - sensor.srne_grid_l3_active_power
+      - sensor.srne_grid_l3_apparent_power
+      - sensor.srne_grid_l3_current
+      - sensor.srne_grid_l3_voltage
+      - sensor.srne_grid_total_active_power
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["L1 Napięcie:",'sensor.srne_grid_l1_voltage'," V",1],["L1 Prąd:",'sensor.srne_grid_l1_current'," A",1],["L1 Moc czynna:",'sensor.srne_grid_l1_active_power'," W",0],["L1 Moc pozorna:",'sensor.srne_grid_l1_apparent_power'," VA",0],["L2 Napięcie:",'sensor.srne_grid_l2_voltage'," V",1],["L2 Prąd:",'sensor.srne_grid_l2_current'," A",1],["L2 Moc czynna:",'sensor.srne_grid_l2_active_power'," W",0],["L2 Moc pozorna:",'sensor.srne_grid_l2_apparent_power'," VA",0],["L3 Napięcie:",'sensor.srne_grid_l3_voltage'," V",1],["L3 Prąd:",'sensor.srne_grid_l3_current'," A",1],["L3 Moc czynna:",'sensor.srne_grid_l3_active_power'," W",0],["L3 Moc pozorna:",'sensor.srne_grid_l3_apparent_power'," VA",0],["Moc czynna łącznie:",'sensor.srne_grid_total_active_power'," W",0],["Częstotliwość:",'sensor.srne_grid_frequency'," Hz",2]];return '<div class="lcdp"><div class="ttl">Dane sieci</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+    - type: custom:apexcharts-card
+      header:
+        show: true
+        title: Moc sieci na fazach (24 h)
+        show_states: true
+        colorize_states: true
+      graph_span: 24h
+      update_interval: 1min
+      chart_type: line
+      apex_config:
+        chart:
+          height: 260
+          background: transparent
+          foreColor: '#9ad7ee'
+        legend:
+          show: true
+        stroke:
+          curve: smooth
+        dataLabels:
+          enabled: false
+        theme:
+          mode: dark
+        grid:
+          borderColor: rgba(0,229,255,0.12)
+      series:
+      - entity: sensor.srne_grid_l1_active_power
+        name: L1
+        type: line
+        color: '#ffc107'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_grid_l2_active_power
+        name: L2
+        type: line
+        color: '#40c4ff'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_grid_l3_active_power
+        name: L3
+        type: line
+        color: '#e040fb'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_grid_total_active_power
+        name: Łącznie
+        type: area
+        color: '#00e676'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      yaxis:
+      - decimals: 0
+        apex_config:
+          title:
+            text: W
+    - type: custom:button-card
+      entity: sensor.srne_energy_to_grid_today
+      triggers_update:
+      - sensor.srne_energy_to_grid_today
+      - sensor.srne_energy_to_grid_total
+      - sensor.srne_load_energy_from_grid_today
+      - sensor.srne_load_energy_from_grid_total
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["Oddane do sieci dziś:",'sensor.srne_energy_to_grid_today'," kWh",1],["Oddane do sieci łącznie:",'sensor.srne_energy_to_grid_total'," kWh",0],["Pobrane z sieci dziś:",'sensor.srne_load_energy_from_grid_today'," kWh",1],["Pobrane z sieci łącznie:",'sensor.srne_load_energy_from_grid_total'," kWh",0]];return '<div class="lcdp"><div class="ttl">Energia</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+  - title: Magazyn
+    path: srne-lcd-battery
+    icon: mdi:battery-heart-variant
+    subview: true
+    back_path: srne-lcd
+    theme: SRNE LCD
+    cards:
+    - type: custom:button-card
+      entity: sensor.srne_battery_soc
+      triggers_update:
+      - sensor.srne_battery_current
+      - sensor.srne_battery_power
+      - sensor.srne_battery_soc
+      - sensor.srne_battery_soh
+      - sensor.srne_battery_temperature
+      - sensor.srne_battery_voltage
+      - sensor.srne_charge_state
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        bat: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+          const soc=v('sensor.srne_battery_soc'),p=v('sensor.srne_battery_power');
+          const col=p!==null&&p<-30?'#00e676':(p!==null&&p>30?'#ff9800':'#00e5ff');
+          const row=(k,x)=>'<div class="r"><span class="k">'+k+'</span><span class="x">'+x+'</span></div>';
+          return '<div class="bat" style="--c:'+col+'"><div class="shell"><div class="cap"></div><div class="lvl'+(p!==null&&p<-30?' chg':'')+'" style="height:'+(soc===null?0:soc)+'%"></div><div class="txt">'+f(soc)+'%</div></div>'
+           +'<div class="info">'
+           +row('Moc',(p===null?'—':(p<0?'↓ ładowanie ':(p>0?'↑ rozładowanie ':''))+Math.abs(p).toFixed(0))+' W')
+           +row('Napięcie',f(v('sensor.srne_battery_voltage'),1)+' V')
+           +row('Prąd',f(v('sensor.srne_battery_current'),1)+' A')
+           +row('Temperatura',f(v('sensor.srne_battery_temperature'),1)+' °C')
+           +row('Stan ładowania',t('sensor.srne_charge_state'))
+           +row('SOH',f(v('sensor.srne_battery_soh'))+' %')
+           +'</div></div>';
+
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"bat"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 14px
+        - border-radius: 22px
+      extra_styles: |-
+        @keyframes rise{to{background-position:0 -200%;}}
+        @keyframes glow{0%,100%{box-shadow:0 0 8px var(--c);}50%{box-shadow:0 0 26px var(--c);}}
+        .bat{display:flex;align-items:center;justify-content:center;gap:24px;padding:8px;flex-wrap:wrap;}
+        .shell{position:relative;width:100px;height:180px;border:3px solid var(--c);border-radius:18px;overflow:hidden;background:rgba(6,18,38,.9);animation:glow 2.6s ease-in-out infinite;}
+        .cap{position:absolute;top:-9px;left:34px;width:26px;height:8px;background:var(--c);border-radius:3px 3px 0 0;}
+        .lvl{position:absolute;left:0;bottom:0;width:100%;background:linear-gradient(0deg,var(--c),rgba(255,255,255,.35));opacity:.85;transition:height 1s;}
+        .lvl.chg{background:linear-gradient(0deg,var(--c) 0%,#d7ffe6 25%,var(--c) 50%,#d7ffe6 75%,var(--c) 100%);background-size:100% 200%;animation:rise 2.2s linear infinite;}
+        .txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;text-shadow:0 0 10px #000;}
+        .info{min-width:150px;}
+        .info .r{display:flex;justify-content:space-between;gap:16px;padding:4px 0;border-bottom:1px dashed rgba(0,229,255,.15);}
+        .info .k{color:#5cc8ff;font-size:13px;}.info .x{color:#fff;font-weight:700;font-size:14px;text-shadow:0 0 8px rgba(0,229,255,.5);}
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:modern-circular-gauge
+        entity: sensor.srne_battery_power
+        name: Moc (+ rozł. / − ład.)
+        min: -12000
+        max: 12000
+        unit: W
+        smooth_segments: true
+        adaptive_icon_color: true
+        gauge_foreground_style:
+          color: adaptive
+        gauge_background_style:
+          width: 2
+          color: adaptive
+        segments:
+        - from: -12000
+          color: *id002
+        - from: -100
+          color: *id001
+        - from: 100
+          color: *id003
+        needle: true
+      - type: custom:modern-circular-gauge
+        entity: sensor.srne_battery_temperature
+        name: Temperatura
+        min: 0
+        max: 60
+        unit: °C
+        smooth_segments: true
+        adaptive_icon_color: true
+        gauge_foreground_style:
+          color: adaptive
+        gauge_background_style:
+          width: 2
+          color: adaptive
+        segments:
+        - from: 0
+          color: *id001
+        - from: 15
+          color: *id002
+        - from: 40
+          color: *id003
+        - from: 50
+          color: &id004
+          - 244
+          - 67
+          - 54
+    - type: custom:button-card
+      entity: sensor.srne_bms_battery_voltage
+      triggers_update:
+      - sensor.srne_battery_soh
+      - sensor.srne_bms_alarm_1
+      - sensor.srne_bms_alarm_2
+      - sensor.srne_bms_charge_limit_current
+      - sensor.srne_bms_charge_limit_voltage
+      - sensor.srne_bms_battery_current
+      - sensor.srne_bms_discharge_limit_current
+      - sensor.srne_bms_protection_1
+      - sensor.srne_bms_protection_2
+      - sensor.srne_bms_battery_temperature
+      - sensor.srne_bms_battery_voltage
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["Napięcie baterii:",'sensor.srne_bms_battery_voltage'," V",1],["Prąd baterii:",'sensor.srne_bms_battery_current'," A",1],["Temp. baterii:",'sensor.srne_bms_battery_temperature'," °C",1],["SOH:",'sensor.srne_battery_soh'," %",0],["Napięcie ładowania bat.:",'sensor.srne_bms_charge_limit_voltage'," V",1],["Prąd ładowania baterii:",'sensor.srne_bms_charge_limit_current'," A",1],["Prąd rozładowania baterii:",'sensor.srne_bms_discharge_limit_current'," A",1],["Alarmy 1:",'sensor.srne_bms_alarm_1',"",null],["Alarmy 2:",'sensor.srne_bms_alarm_2',"",null],["Ochrona 1:",'sensor.srne_bms_protection_1',"",null],["Ochrona 2:",'sensor.srne_bms_protection_2',"",null]];return '<div class="lcdp"><div class="ttl">Dane BMS</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+    - type: custom:apexcharts-card
+      header:
+        show: true
+        title: SOC i napięcie (24 h)
+        show_states: true
+        colorize_states: true
+      graph_span: 24h
+      update_interval: 1min
+      chart_type: line
+      apex_config:
+        chart:
+          height: 260
+          background: transparent
+          foreColor: '#9ad7ee'
+        legend:
+          show: true
+        stroke:
+          curve: smooth
+        dataLabels:
+          enabled: false
+        theme:
+          mode: dark
+        grid:
+          borderColor: rgba(0,229,255,0.12)
+      series:
+      - entity: sensor.srne_battery_soc
+        name: SOC
+        type: area
+        color: '#00e676'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+        yaxis_id: soc
+      - entity: sensor.srne_battery_voltage
+        name: Napięcie
+        type: line
+        color: '#40c4ff'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+        yaxis_id: volt
+      yaxis:
+      - id: soc
+        min: 0
+        max: 100
+        decimals: 0
+        apex_config:
+          title:
+            text: '%'
+      - id: volt
+        opposite: true
+        decimals: 1
+        apex_config:
+          title:
+            text: V
+    - type: custom:apexcharts-card
+      header:
+        show: true
+        title: Moc magazynu (24 h)
+        show_states: true
+        colorize_states: true
+      graph_span: 24h
+      update_interval: 1min
+      chart_type: line
+      apex_config:
+        chart:
+          height: 260
+          background: transparent
+          foreColor: '#9ad7ee'
+        legend:
+          show: true
+        stroke:
+          curve: smooth
+        dataLabels:
+          enabled: false
+        theme:
+          mode: dark
+        grid:
+          borderColor: rgba(0,229,255,0.12)
+      series:
+      - entity: sensor.srne_battery_power
+        name: Moc (+ rozładowanie / − ładowanie)
+        type: area
+        color: '#ff9800'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      yaxis:
+      - decimals: 0
+        apex_config:
+          title:
+            text: W
+    - type: custom:button-card
+      entity: sensor.srne_battery_charge_energy_today
+      triggers_update:
+      - sensor.srne_battery_charge_today_ah
+      - sensor.srne_battery_charge_energy_today
+      - sensor.srne_battery_discharge_today_ah
+      - sensor.srne_battery_discharge_energy_today
+      - sensor.srne_grid_charge_today_ah
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["Ładowanie dziś:",'sensor.srne_battery_charge_energy_today'," kWh",1],["Rozładowanie dziś:",'sensor.srne_battery_discharge_energy_today'," kWh",1],["Ładowanie dziś (Ah):",'sensor.srne_battery_charge_today_ah'," Ah",0],["Rozładowanie dziś (Ah):",'sensor.srne_battery_discharge_today_ah'," Ah",0],["Ładowanie z sieci dziś (Ah):",'sensor.srne_grid_charge_today_ah'," Ah",0]];return '<div class="lcdp"><div class="ttl">Energia magazynu</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+    - &id005
+      type: custom:mushroom-entity-card
+      entity: lock.srne_settings_lock
+      name: Blokada ustawień
+      fill_container: true
+      tap_action:
+        action: more-info
+      hold_action:
+        action: none
+      secondary_info: state
+      icon_color: orange
+    - &id006
+      type: conditional
+      conditions:
+      - condition: state
+        entity: lock.srne_settings_lock
+        state: locked
+      card:
+        type: markdown
+        content: 🔒 **Ustawienia zablokowane.** Dotknij „Blokada ustawień” i wpisz hasło falownika (ustawień zaawansowanych), aby je odblokować.
+    - type: conditional
+      conditions:
+      - condition: state
+        entity: lock.srne_settings_lock
+        state: unlocked
+      card:
+        type: vertical-stack
+        cards:
+        - &id007
+          type: custom:mushroom-chips-card
+          alignment: end
+          chips:
+          - type: template
+            icon: mdi:lock
+            icon_color: orange
+            content: Zablokuj ustawienia
+            tap_action:
+              action: perform-action
+              perform_action: lock.lock
+              target:
+                entity_id: lock.srne_settings_lock
+              data:
+                code: '0'
+        - type: custom:mushroom-title-card
+          title: Rozładowanie
+          subtitle: Dotknij kafelka, aby zmienić wartość · napięcia mają rozdzielczość 0,4 V
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-entity-card
+            entity: number.srne_battery_voltage_switch_to_grid
+            name: Napięcie zatrzymania rozł.
+            icon: mdi:flash-off
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_battery_voltage_switch_to_inverter
+            name: Napięcie rozpoczęcia rozł.
+            icon: mdi:flash
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_battery_low_voltage_alarm
+            name: Alarm niskiego nap. baterii
+            icon: mdi:flash-alert
+            icon_color: orange
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_over_discharge_recovery_voltage
+            name: Regeneracja baterii (niskie nap.)
+            icon: mdi:flash
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_battery_low_voltage_fault
+            name: Błąd niskiego nap. baterii
+            icon: mdi:flash-off
+            icon_color: red
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_max_discharge_current
+            name: Maks. prąd rozł.
+            icon: mdi:current-dc
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_battery_soc_switch_to_grid
+            name: SOC zatrzymanie rozł.
+            icon: mdi:battery-arrow-down
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_battery_soc_switch_to_battery
+            name: SOC ponownego rozł.
+            icon: mdi:battery-sync
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_battery_low_soc_alarm
+            name: Alarm niska pojemność
+            icon: mdi:battery-alert
+            icon_color: orange
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_battery_discharge_cutoff_soc
+            name: Błąd niskie SOC
+            icon: mdi:battery-off
+            icon_color: red
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_over_discharge_delay_time
+            name: Opóźnienie błędu niskiego nap.
+            icon: mdi:timer-outline
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+        - type: custom:mushroom-title-card
+          title: Ładowanie
+          subtitle: Dotknij kafelka, aby zmienić wartość
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-entity-card
+            entity: number.srne_max_charge_voltage
+            name: Maks. napięcie ład.
+            icon: mdi:flash
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_recharge_voltage
+            name: Napięcie ponownego ład.
+            icon: mdi:flash
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_charge_stop_current
+            name: Prąd zatrzymania ład.
+            icon: mdi:current-dc
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_max_charge_current
+            name: Maks. prąd ładowania
+            icon: mdi:current-dc
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_max_grid_charge_current
+            name: Maks. prąd ład. z sieci
+            icon: mdi:current-ac
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+          - type: custom:mushroom-entity-card
+            entity: number.srne_charge_stop_soc
+            name: SOC zatrzymanie ład.
+            icon: mdi:battery-charging-high
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+  - title: Odbiory
+    path: srne-lcd-load
+    icon: mdi:home-lightning-bolt
+    subview: true
+    back_path: srne-lcd
+    theme: SRNE LCD
+    cards:
+    - type: grid
+      columns: 1
+      square: false
+      cards:
+      - type: custom:modern-circular-gauge
+        entity: sensor.srne_load_total_active_power
+        name: Odbiory
+        min: 0
+        max: 12000
+        unit: W
+        smooth_segments: true
+        adaptive_icon_color: true
+        gauge_foreground_style:
+          color: adaptive
+        gauge_background_style:
+          width: 2
+          color: adaptive
+        segments:
+        - from: 0
+          color: *id002
+        - from: 6000
+          color: *id003
+        - from: 10000
+          color: *id004
+    - type: custom:button-card
+      entity: sensor.srne_load_total_active_power
+      triggers_update:
+      - sensor.srne_load_total_active_power
+      - sensor.zmywarka_mqtt_power
+      - sensor.pralka_mqtt_power
+      - sensor.suszarka_mqtt_power
+      - sensor.lodowka_mqtt_power
+      - sensor.rtv_mqtt_power
+      - sensor.licznik_pompa_power
+      - sensor.licznik_ind_piek_power
+      - sensor.karol_pc_power
+      - sensor.adam_pc_power
+      - sensor.szafa_rack_mqtt_power
+      - sensor.klimatyzacja_salon_mqtt_power
+      variables:
+        # >>> DODAJ SWOJE ODBIORNIKI: nowy wiersz  - [Nazwa, sensor.encja_mocy, mdi:ikona]  (ikona opcjonalna) <<<
+        odbiorniki:
+        - [Zmywarka, sensor.zmywarka_mqtt_power, 'mdi:dishwasher']
+        - [Pralka, sensor.pralka_mqtt_power, 'mdi:washing-machine']
+        - [Suszarka, sensor.suszarka_mqtt_power, 'mdi:tumble-dryer']
+        - [Lodówka, sensor.lodowka_mqtt_power, 'mdi:fridge']
+        - [RTV, sensor.rtv_mqtt_power, 'mdi:television']
+        - [Pompa ciepła, sensor.licznik_pompa_power, 'mdi:heat-pump']
+        - [Indukcja i piekarnik, sensor.licznik_ind_piek_power, 'mdi:stove']
+        - [Komputer Karola, sensor.karol_pc_power, 'mdi:desktop-tower']
+        - [Komputer Adama, sensor.adam_pc_power, 'mdi:desktop-tower']
+        - [Szafa rack, sensor.szafa_rack_mqtt_power, 'mdi:server-network']
+        - [Klimatyzacja salon, sensor.klimatyzacja_salon_mqtt_power, 'mdi:air-conditioner']
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+          const list=variables.odbiorniki||[];
+          const pw=(id)=>{const s=states[id];if(!s||s.state===''||isNaN(s.state))return null;let x=Number(s.state);const u=s.attributes&&s.attributes.unit_of_measurement;if(u==='kW')x*=1000;return x;};
+          const fw=(x)=>x===null?'—':(x>=1000?(x/1000).toFixed(2)+' kW':Math.round(x)+' W');
+          const total=v('sensor.srne_load_total_active_power');
+          const rows=list.map(x=>({n:x[0],ic:x[2]||'mdi:power-plug',w:pw(x[1])}));
+          const known=rows.reduce((a,r)=>a+(r.w>0?r.w:0),0);
+          rows.sort((a,b)=>(b.w||0)-(a.w||0));
+          const max=Math.max(1,...rows.map(r=>r.w||0));
+          const rest=total===null?null:Math.max(0,total-known);
+          return '<div class="od"><div class="ttl"><span>Odbiorniki</span><span>'+fw(known)+'</span></div>'
+           +rows.map(r=>'<div class="row'+((r.w===null||r.w<5)?' off':'')+'"><ha-icon icon="'+r.ic+'"></ha-icon><span class="nm">'+r.n+'</span><span class="w">'+fw(r.w)+'</span><div class="bar2"><i style="width:'+Math.round(((r.w||0)/max)*100)+'%"></i></div></div>').join('')
+           +'<div class="sum"><span>Suma opomiarowanych</span><b>'+fw(known)+'</b></div>'
+           +'<div class="sum"><span>Pozostałe (LOAD − opomiarowane)</span><b>'+fw(rest)+'</b></div></div>';
+
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .od{padding:4px 8px;}
+        .od .ttl{display:flex;justify-content:space-between;color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .od .row{display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:2px 8px;padding:6px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .od .row ha-icon{--mdc-icon-size:20px;color:#00e5ff;}
+        .od .nm{color:#bfeaff;font-size:13px;}
+        .od .w{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+        .od .bar2{grid-column:2/4;height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;}
+        .od .bar2 i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#00e5ff,#00e676);transition:width .6s;}
+        .od .off{opacity:.45;}
+        .od .sum{display:flex;justify-content:space-between;padding:6px 0 2px;color:#7fd8ff;font-size:12px;}
+        .od .sum b{color:#fff;}
+    - type: custom:button-card
+      entity: sensor.srne_load_l1_active_power
+      triggers_update:
+      - sensor.srne_home_load_l1_active_power
+      - sensor.srne_home_load_l2_active_power
+      - sensor.srne_home_load_l3_active_power
+      - sensor.srne_home_load_total_active_power
+      - sensor.srne_load_l1_active_power
+      - sensor.srne_load_l2_active_power
+      - sensor.srne_load_l3_active_power
+      - sensor.srne_load_total_active_power
+      - sensor.srne_inverter_output_frequency
+      - sensor.srne_second_load_l1_active_power
+      - sensor.srne_second_load_l2_active_power
+      - sensor.srne_second_load_l3_active_power
+      - sensor.srne_second_load_total_active_power
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["L1 Moc czynna:",'sensor.srne_load_l1_active_power'," W",0],["L2 Moc czynna:",'sensor.srne_load_l2_active_power'," W",0],["L3 Moc czynna:",'sensor.srne_load_l3_active_power'," W",0],["LOAD łącznie:",'sensor.srne_load_total_active_power'," W",0],["L1 Home Load:",'sensor.srne_home_load_l1_active_power'," W",0],["L2 Home Load:",'sensor.srne_home_load_l2_active_power'," W",0],["L3 Home Load:",'sensor.srne_home_load_l3_active_power'," W",0],["HOME łącznie:",'sensor.srne_home_load_total_active_power'," W",0],["L1 Odbiory dod.:",'sensor.srne_second_load_l1_active_power'," W",0],["L2 Odbiory dod.:",'sensor.srne_second_load_l2_active_power'," W",0],["L3 Odbiory dod.:",'sensor.srne_second_load_l3_active_power'," W",0],["Odbiory dod. łącznie:",'sensor.srne_second_load_total_active_power'," W",0],["Częstotliwość:",'sensor.srne_inverter_output_frequency'," Hz",2]];return '<div class="lcdp"><div class="ttl">Dane odbiorów</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+    - type: custom:apexcharts-card
+      header:
+        show: true
+        title: Moc odbiorów (24 h)
+        show_states: true
+        colorize_states: true
+      graph_span: 24h
+      update_interval: 1min
+      chart_type: line
+      apex_config:
+        chart:
+          height: 260
+          background: transparent
+          foreColor: '#9ad7ee'
+        legend:
+          show: true
+        stroke:
+          curve: smooth
+        dataLabels:
+          enabled: false
+        theme:
+          mode: dark
+        grid:
+          borderColor: rgba(0,229,255,0.12)
+      series:
+      - entity: sensor.srne_load_l1_active_power
+        name: L1
+        type: line
+        color: '#ffc107'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_load_l2_active_power
+        name: L2
+        type: line
+        color: '#40c4ff'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_load_l3_active_power
+        name: L3
+        type: line
+        color: '#e040fb'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      - entity: sensor.srne_load_total_active_power
+        name: Łącznie
+        type: area
+        color: '#00e676'
+        stroke_width: 2
+        group_by:
+          func: avg
+          duration: 5min
+      yaxis:
+      - decimals: 0
+        apex_config:
+          title:
+            text: W
+    - type: custom:button-card
+      entity: sensor.srne_load_energy_today
+      triggers_update:
+      - sensor.srne_load_energy_today
+      - sensor.srne_load_energy_total
+      show_name: false
+      show_icon: false
+      show_state: false
+      show_label: false
+      custom_fields:
+        panel: |-
+          [[[
+          const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+          const rows=[["Dziś:",'sensor.srne_load_energy_today'," kWh",1],["Łącznie:",'sensor.srne_load_energy_total'," kWh",0]];return '<div class="lcdp"><div class="ttl">Zużycie</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+          ]]]
+      styles:
+        grid:
+        - grid-template-areas: '"panel"'
+        - grid-template-columns: 1fr
+        card:
+        - padding: 10px
+        - border-radius: 18px
+      extra_styles: |-
+        .lcdp{padding:4px 8px;}
+        .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+        .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+        .lcdp .k{color:#5cc8ff;font-size:13px;}
+        .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+  - title: Falownik
+    path: srne-lcd-inverter
+    icon: mdi:flash
+    subview: true
+    back_path: srne-lcd
+    theme: SRNE LCD
+    cards:
+    - type: grid
+      columns: 1
+      square: false
+      cards:
+      - type: custom:button-card
+        entity: sensor.srne_machine_state
+        triggers_update:
+        - sensor.srne_lcd_software_version
+        - sensor.srne_machine_state
+        - sensor.srne_mcu1_software_version
+        - sensor.srne_mcu2_software_version
+        - sensor.srne_minor_version
+        - sensor.srne_rs485_address
+        - sensor.srne_serial_number
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          panel: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+            const rows=[["Stan urządzenia:",'sensor.srne_machine_state',"",null],["SN:",'sensor.srne_serial_number',"",null],["MCU1 wersja:",'sensor.srne_mcu1_software_version',"",null],["Wersja mniejsza:",'sensor.srne_minor_version',"",0],["Wersja LCD:",'sensor.srne_lcd_software_version',"",null],["MCU2 wersja:",'sensor.srne_mcu2_software_version',"",null],["Adres RS485:",'sensor.srne_rs485_address',"",0]];return '<div class="lcdp"><div class="ttl">Dane falownika 1/3</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"panel"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: 10px
+          - border-radius: 18px
+        extra_styles: |-
+          .lcdp{padding:4px 8px;}
+          .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+          .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+          .lcdp .k{color:#5cc8ff;font-size:13px;}
+          .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+      - type: custom:button-card
+        entity: sensor.srne_ambient_temperature
+        triggers_update:
+        - sensor.srne_inverter_output_l1_current
+        - sensor.srne_inverter_output_l1_voltage
+        - sensor.srne_inverter_output_l2_current
+        - sensor.srne_inverter_output_l2_voltage
+        - sensor.srne_inverter_output_l3_current
+        - sensor.srne_inverter_output_l3_voltage
+        - sensor.srne_ambient_temperature
+        - sensor.srne_dcac_heatsink_temperature
+        - sensor.srne_dcdc_heatsink_temperature
+        - sensor.srne_transformer_temperature
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          panel: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+            const rows=[["Temperatura na zewnątrz:",'sensor.srne_ambient_temperature'," °C",1],["Temperatura falownika:",'sensor.srne_dcac_heatsink_temperature'," °C",1],["Temperatura PV:",'sensor.srne_dcdc_heatsink_temperature'," °C",1],["Temperatura transformatora:",'sensor.srne_transformer_temperature'," °C",1],["L1 Napięcie:",'sensor.srne_inverter_output_l1_voltage'," V",1],["L1 Prąd:",'sensor.srne_inverter_output_l1_current'," A",1],["L2 Napięcie:",'sensor.srne_inverter_output_l2_voltage'," V",1],["L2 Prąd:",'sensor.srne_inverter_output_l2_current'," A",1],["L3 Napięcie:",'sensor.srne_inverter_output_l3_voltage'," V",1],["L3 Prąd:",'sensor.srne_inverter_output_l3_current'," A",1]];return '<div class="lcdp"><div class="ttl">Dane falownika 2/3</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"panel"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: 10px
+          - border-radius: 18px
+        extra_styles: |-
+          .lcdp{padding:4px 8px;}
+          .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+          .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+          .lcdp .k{color:#5cc8ff;font-size:13px;}
+          .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+      - type: custom:button-card
+        entity: sensor.srne_positive_bus_voltage
+        triggers_update:
+        - sensor.srne_negative_bus_voltage
+        - sensor.srne_positive_bus_voltage
+        - sensor.srne_bus_voltage_total
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          panel: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+            const rows=[["Napięcie dodatniej szyny:",'sensor.srne_positive_bus_voltage'," V",1],["Napięcie ujemnej szyny:",'sensor.srne_negative_bus_voltage'," V",1],["Total nap. na Busbar:",'sensor.srne_bus_voltage_total'," V",1]];return '<div class="lcdp"><div class="ttl">Dane falownika 3/3</div>'+rows.map(r=>'<div class="row"><span class="k">'+r[0]+'</span><span class="x">'+(r[3]===null?t(r[1]):f(v(r[1]),r[3])+r[2])+'</span></div>').join('')+'</div>';
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"panel"'
+          - grid-template-columns: 1fr
+          card:
+          - padding: 10px
+          - border-radius: 18px
+        extra_styles: |-
+          .lcdp{padding:4px 8px;}
+          .lcdp .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+          .lcdp .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed rgba(0,229,255,.12);}
+          .lcdp .k{color:#5cc8ff;font-size:13px;}
+          .lcdp .x{color:#fff;font-weight:700;font-size:14px;text-align:right;text-shadow:0 0 8px rgba(0,229,255,.6);}
+      - type: custom:button-card
+        entity: sensor.srne_fault_description
+        triggers_update:
+        - binary_sensor.srne_fault_active
+        - sensor.srne_fault_description
+        tap_action:
+          action: more-info
+        show_name: false
+        show_icon: false
+        show_state: false
+        show_label: false
+        custom_fields:
+          panel: |-
+            [[[
+            const v=(id)=>{const s=states[id];return (s&&s.state!=='unavailable'&&s.state!=='unknown'&&s.state!=='')?Number(s.state):null;};const f=(x,d=0)=>x===null?'—':x.toFixed(d);const t=(id)=>{const s=states[id];return s?s.state:'—';};
+
+            const on=t('binary_sensor.srne_fault_active')==='on';
+            const st=states['sensor.srne_fault_description'];
+            let items=(st&&st.attributes&&Array.isArray(st.attributes.faults))?st.attributes.faults.map(x=>({c:x.code,t:x.title,o:x.affects_output})):[];
+            if(!items.length&&on&&st&&st.state){items=String(st.state).split('; ').map(p=>{const m=p.match(/^\[(\d+)\]\s*(.*)$/);return m?{c:Number(m[1]),t:m[2],o:null}:{c:null,t:p,o:null};});}
+            const pad=(c)=>c===null?'--':String(c).padStart(2,'0');
+            return '<div class="flt"><div class="ttl">Błędy'+(items.length?' ('+items.length+')':'')+'</div>'
+             +((!on&&!items.length)?'<div class="ok">Brak błędów</div>':items.map(x=>'<div class="f"><span class="n">'+pad(x.c)+'</span><span class="tx">'+x.t+(x.o?'<span class="w">wyłącza wyjście falownika</span>':'')+'</span></div>').join(''))
+             +'</div>';
+
+            ]]]
+        styles:
+          grid:
+          - grid-template-areas: '"panel"'
+          - grid-template-columns: 1fr
+          - grid-template-rows: auto
+          card:
+          - padding: 10px
+          - border-radius: 18px
+          - height: auto
+          - overflow: visible
+        extra_styles: |-
+          .flt{padding:4px 8px;}
+          .flt .ttl{color:#00e5ff;letter-spacing:.14em;text-transform:uppercase;font-size:12px;border-bottom:1px solid rgba(0,229,255,.35);padding-bottom:6px;margin-bottom:6px;text-shadow:0 0 8px rgba(0,229,255,.7);}
+          .flt .ok{color:#00e676;font-weight:700;font-size:14px;padding:4px 0;}
+          .flt .f{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:7px 0;border-bottom:1px dashed rgba(255,82,82,.28);}
+          .flt .n{color:#ffb3b3;font-weight:800;font-family:'Courier New',monospace;font-size:15px;border:1.5px solid #ff5252;border-radius:4px;padding:0 7px;background:rgba(255,82,82,.16);text-shadow:0 0 6px #ff5252;}
+          .flt .tx{color:#fff;font-size:14px;line-height:1.35;white-space:normal;overflow-wrap:anywhere;word-break:break-word;}
+          .flt .w{display:block;color:#ff9e80;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
+    - *id005
+    - *id006
+    - type: conditional
+      conditions:
+      - condition: state
+        entity: lock.srne_settings_lock
+        state: unlocked
+      card:
+        type: vertical-stack
+        cards:
+        - *id007
+        - type: custom:mushroom-title-card
+          title: Typ baterii
+          subtitle: 'Tylko odczyt: typ i protokół BMS'
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.srne_battery_type
+            name: Typ baterii
+            fill_container: true
+            icon: mdi:battery-heart-variant
+          - type: custom:mushroom-entity-card
+            entity: sensor.srne_bms_protocol
+            name: Protokół kom. BMS
+            fill_container: true
+            icon: mdi:battery-sync
+          - type: custom:mushroom-select-card
+            entity: select.srne_bms_charge_current_limit_mode
+            name: Tryb ogr. prądu ład. BMS
+            icon: mdi:battery-lock
+            fill_container: true
+          - type: custom:mushroom-select-card
+            entity: select.srne_bms_communication
+            name: Komunikacja BMS
+            icon: mdi:lan-connect
+            fill_container: true
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_battery_temperature_compensation
+            name: Korekta temp. prądu ład.
+            icon: mdi:thermometer-lines
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+        - type: custom:mushroom-title-card
+          title: Tryb pracy
+          subtitle: Zapis wymaga hasła wpisanego w opcjach integracji
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-select-card
+            entity: select.srne_hybrid_grid_mode
+            name: Tryb sieci hybrydowy
+            icon: mdi:transmission-tower
+            fill_container: true
+          - type: custom:mushroom-select-card
+            entity: select.srne_pv_power_priority
+            name: Zarządzanie energią PV
+            icon: mdi:solar-power
+            fill_container: true
+          - type: custom:mushroom-select-card
+            entity: select.srne_battery_energy_management
+            name: Zarządzanie energią baterii
+            icon: mdi:home-battery
+            fill_container: true
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_grid_charging_enable
+            name: Włącz ład. sieciowe
+            icon: mdi:transmission-tower-import
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+        - type: custom:mushroom-title-card
+          title: Harmonogram
+          subtitle: Dotknij wartość, aby zmienić
+        - type: custom:mushroom-title-card
+          title: Czasowe ładowanie
+        - type: custom:mushroom-entity-card
+          entity: switch.srne_timed_charge_enable
+          name: Czasowe ładowanie wł.
+          icon: mdi:calendar-clock
+          icon_color: green
+          fill_container: true
+          tap_action:
+            action: toggle
+        - type: grid
+          columns: 3
+          square: false
+          cards:
+          - type: vertical-stack
+            cards:
+            - type: custom:mushroom-title-card
+              title: Ładowanie – okres 1
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_charge_1_start
+              name: Czas rozp.
+              fill_container: true
+              icon: mdi:clock-start
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_charge_1_end
+              name: Czas zak.
+              fill_container: true
+              icon: mdi:clock-end
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_1_stop_soc
+              name: Stop SOC
+              icon: mdi:battery-charging-high
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_1_stop_voltage
+              name: Stop volt
+              icon: mdi:flash
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_1_max_power
+              name: Maks. moc
+              icon: mdi:lightning-bolt
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: switch.srne_timed_charge_1_grid_source
+              name: Sieć
+              icon: mdi:transmission-tower
+              icon_color: green
+              fill_container: true
+              tap_action:
+                action: toggle
+            - type: custom:mushroom-entity-card
+              entity: switch.srne_timed_charge_1_generator_source
+              name: Gen
+              icon: mdi:engine
+              icon_color: green
+              fill_container: true
+              tap_action:
+                action: toggle
+          - type: vertical-stack
+            cards:
+            - type: custom:mushroom-title-card
+              title: Ładowanie – okres 2
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_charge_2_start
+              name: Czas rozp.
+              fill_container: true
+              icon: mdi:clock-start
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_charge_2_end
+              name: Czas zak.
+              fill_container: true
+              icon: mdi:clock-end
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_2_stop_soc
+              name: Stop SOC
+              icon: mdi:battery-charging-high
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_2_stop_voltage
+              name: Stop volt
+              icon: mdi:flash
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_2_max_power
+              name: Maks. moc
+              icon: mdi:lightning-bolt
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: switch.srne_timed_charge_2_grid_source
+              name: Sieć
+              icon: mdi:transmission-tower
+              icon_color: green
+              fill_container: true
+              tap_action:
+                action: toggle
+            - type: custom:mushroom-entity-card
+              entity: switch.srne_timed_charge_2_generator_source
+              name: Gen
+              icon: mdi:engine
+              icon_color: green
+              fill_container: true
+              tap_action:
+                action: toggle
+          - type: vertical-stack
+            cards:
+            - type: custom:mushroom-title-card
+              title: Ładowanie – okres 3
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_charge_3_start
+              name: Czas rozp.
+              fill_container: true
+              icon: mdi:clock-start
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_charge_3_end
+              name: Czas zak.
+              fill_container: true
+              icon: mdi:clock-end
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_3_stop_soc
+              name: Stop SOC
+              icon: mdi:battery-charging-high
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_3_stop_voltage
+              name: Stop volt
+              icon: mdi:flash
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_charge_3_max_power
+              name: Maks. moc
+              icon: mdi:lightning-bolt
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: switch.srne_timed_charge_3_grid_source
+              name: Sieć
+              icon: mdi:transmission-tower
+              icon_color: green
+              fill_container: true
+              tap_action:
+                action: toggle
+            - type: custom:mushroom-entity-card
+              entity: switch.srne_timed_charge_3_generator_source
+              name: Gen
+              icon: mdi:engine
+              icon_color: green
+              fill_container: true
+              tap_action:
+                action: toggle
+        - type: custom:mushroom-title-card
+          title: Czasowe rozładowanie
+        - type: custom:mushroom-entity-card
+          entity: switch.srne_timed_discharge_enable
+          name: Czasowe rozładowanie wł.
+          icon: mdi:calendar-clock
+          icon_color: orange
+          fill_container: true
+          tap_action:
+            action: toggle
+        - type: grid
+          columns: 3
+          square: false
+          cards:
+          - type: vertical-stack
+            cards:
+            - type: custom:mushroom-title-card
+              title: Rozładowanie – okres 1
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_discharge_1_start
+              name: Czas rozp.
+              fill_container: true
+              icon: mdi:clock-start
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_discharge_1_end
+              name: Czas zak.
+              fill_container: true
+              icon: mdi:clock-end
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_1_stop_soc
+              name: Stop SOC
+              icon: mdi:battery-arrow-down
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_1_stop_voltage
+              name: Stop volt
+              icon: mdi:flash
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_1_max_power
+              name: Maks. moc
+              icon: mdi:lightning-bolt
+              icon_color: orange
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+          - type: vertical-stack
+            cards:
+            - type: custom:mushroom-title-card
+              title: Rozładowanie – okres 2
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_discharge_2_start
+              name: Czas rozp.
+              fill_container: true
+              icon: mdi:clock-start
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_discharge_2_end
+              name: Czas zak.
+              fill_container: true
+              icon: mdi:clock-end
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_2_stop_soc
+              name: Stop SOC
+              icon: mdi:battery-arrow-down
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_2_stop_voltage
+              name: Stop volt
+              icon: mdi:flash
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_2_max_power
+              name: Maks. moc
+              icon: mdi:lightning-bolt
+              icon_color: orange
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+          - type: vertical-stack
+            cards:
+            - type: custom:mushroom-title-card
+              title: Rozładowanie – okres 3
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_discharge_3_start
+              name: Czas rozp.
+              fill_container: true
+              icon: mdi:clock-start
+            - type: custom:mushroom-entity-card
+              entity: time.srne_timed_discharge_3_end
+              name: Czas zak.
+              fill_container: true
+              icon: mdi:clock-end
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_3_stop_soc
+              name: Stop SOC
+              icon: mdi:battery-arrow-down
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_3_stop_voltage
+              name: Stop volt
+              icon: mdi:flash
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_timed_discharge_3_max_power
+              name: Maks. moc
+              icon: mdi:lightning-bolt
+              icon_color: orange
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+        - type: custom:mushroom-title-card
+          title: Tydzień włączony
+        - type: grid
+          columns: 4
+          square: false
+          cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_schedule_monday
+            name: Pon
+            icon: mdi:calendar-check
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_schedule_tuesday
+            name: Wt
+            icon: mdi:calendar-check
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_schedule_wednesday
+            name: Śr
+            icon: mdi:calendar-check
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_schedule_thursday
+            name: Czw
+            icon: mdi:calendar-check
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_schedule_friday
+            name: Pt
+            icon: mdi:calendar-check
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_schedule_saturday
+            name: Sob
+            icon: mdi:calendar-check
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-entity-card
+            entity: switch.srne_schedule_sunday
+            name: Nd
+            icon: mdi:calendar-check
+            icon_color: green
+            fill_container: true
+            tap_action:
+              action: toggle
+        - type: custom:button-card
+          show_icon: false
+          show_name: false
+          tap_action:
+            action: none
+          styles:
+            card:
+            - height: 18px
+            - padding: '0'
+            - background: none
+            - box-shadow: none
+            - border: none
+        - type: vertical-stack
+          cards:
+          - type: custom:button-card
+            name: Ustawienia sieci
+            label: Zmieniaj ostrożnie – wpływa na pracę z siecią · dotknij kafelka, aby zmienić
+            icon: mdi:transmission-tower
+            show_label: true
+            tap_action:
+              action: none
+            styles:
+              grid:
+              - grid-template-areas: '"i n" "i l"'
+              - grid-template-columns: auto 1fr
+              card:
+              - padding: 12px 14px
+              - border-radius: 16px 16px 0 0
+              - border-left: '4px solid #ff9800'
+              - background: rgba(255,152,0,.10)
+              icon:
+              - width: 28px
+              - color: '#ff9800'
+              name:
+              - justify-self: start
+              - font-weight: '700'
+              - letter-spacing: .08em
+              - text-transform: uppercase
+              - color: '#ff9800'
+              label:
+              - justify-self: start
+              - font-size: 12px
+              - opacity: '.8'
+              - text-align: left
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+            - type: custom:mushroom-entity-card
+              entity: sensor.srne_grid_standard
+              name: Standard sieci
+              fill_container: true
+              icon: mdi:transmission-tower
+            - type: custom:mushroom-entity-card
+              entity: sensor.srne_grid_frequency_setting
+              name: Częst. sieci
+              fill_container: true
+              icon: mdi:sine-wave
+            - type: custom:mushroom-entity-card
+              entity: number.srne_max_sell_power
+              name: Max moc sprzedaży
+              icon: mdi:transmission-tower-export
+              icon_color: green
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_max_import_power
+              name: Maks moc import
+              icon: mdi:transmission-tower-import
+              icon_color: orange
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_external_ct_ratio
+              name: Współ. zewn. CT
+              fill_container: true
+              icon: mdi:current-ac
+            - type: custom:mushroom-entity-card
+              entity: number.srne_zero_export_power
+              name: Moc zero-eksport
+              icon: mdi:transmission-tower-off
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_reactive_power
+              name: Moc bierna (+ nadwzbudzenie / − niedowzbudzenie)
+              icon: mdi:flash-triangle
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+            - type: custom:mushroom-entity-card
+              entity: number.srne_power_factor
+              name: Współczynnik mocy PF
+              icon: mdi:cosine-wave
+              icon_color: blue
+              fill_container: true
+              tap_action:
+                action: more-info
+              hold_action:
+                action: none
+        - type: custom:mushroom-chips-card
+          alignment: end
+          chips:
+          - type: template
+            icon: mdi:restart
+            icon_color: orange
+            content: Restart falownika
+            tap_action:
+              action: perform-action
+              perform_action: button.press
+              target:
+                entity_id: button.srne_machine_reset
+              confirmation:
+                text: Zrestartować falownik? Na chwilę zniknie zasilanie odbiorów.
