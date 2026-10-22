@@ -31,13 +31,13 @@ zaawansowanych falownika** (do 5 cyfr).
 
 ## Pliki srne_lcd_theme oraz dashboard_srne_lcd_widoki zawierają przykład dashbordu dla integracji
 
-# Motyw "SRNE LCD" - ciemny, w stylu ekranu falownika SRNE
-# Instalacja: skopiuj do /config/themes/srne_lcd.yaml, w configuration.yaml dodaj:
-#   frontend:
-#     themes: !include_dir_merge_named themes
-# i wykonaj: Narzędzia deweloperskie -> YAML -> Przeładuj motywy (albo restart HA).
+Motyw "SRNE LCD" - ciemny, w stylu ekranu falownika SRNE
+Instalacja: skopiuj do /config/themes/srne_lcd.yaml, w configuration.yaml dodaj:
+  frontend:
+  themes: !include_dir_merge_named themes
+i wykonaj: Narzędzia deweloperskie -> YAML -> Przeładuj motywy (albo restart HA).
 
-  # ===== SRNE LCD v2: jedna zakładka + podwidoki (PV, Sieć, Magazyn, Odbiory, Falownik z ustawieniami) =====
-  # Wymagane: motyw "SRNE LCD" (srne_lcd_theme.yaml) oraz HACS: button-card, mushroom, apexcharts-card, modern-circular-gauge.
-  # Dopisz na końcu listy `views:` w surowym edytorze konfiguracji (wcięcie 2 spacje).
-  # Podwidoki (subview: true) nie są pokazywane na pasku zakładek - otwiera się je kliknięciem w kafelek.
+===== SRNE LCD v2: jedna zakładka + podwidoki (PV, Sieć, Magazyn, Odbiory, Falownik z ustawieniami) =====
+Wymagane: motyw "SRNE LCD" (srne_lcd_theme.yaml) oraz HACS: button-card, mushroom, apexcharts-card, modern-circular-gauge.
+Dopisz na końcu listy `views:` w surowym edytorze konfiguracji (wcięcie 2 spacje).
+Podwidoki (subview: true) nie są pokazywane na pasku zakładek - otwiera się je kliknięciem w kafelek.
