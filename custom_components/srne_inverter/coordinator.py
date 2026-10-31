@@ -81,7 +81,8 @@ class SrneCoordinator(DataUpdateCoordinator[dict[int, int]]):
         # hasło wpisane przy odblokowaniu - tylko w pamięci, do końca czasu odblokowania
         self._password: int | None = None
         self._cycle = 0
-        self._force_slow = False
+        self._slow_pos = 0  # wskaźnik rotacji wolnych bloków (odczyt partiami zamiast jednej długiej serii)
+        self._refresh_addrs: set[int] = set()  # niedawno zapisane adresy - ich bloki odświeżamy w najbliższym cyklu
         self._split: set[tuple[int, int]] = set()
         self._bad: set[int] = set()
         self._fast_blocks = build_blocks(FAST_ADDRESSES)
@@ -114,15 +115,41 @@ class SrneCoordinator(DataUpdateCoordinator[dict[int, int]]):
 
     async def _async_update_data(self) -> dict[int, int]:
         self._cycle += 1
-        slow = self._cycle == 1 or self._force_slow or self._cycle % SLOW_EVERY == 0
-        self._force_slow = False
-        blocks = list(self._fast_blocks) + (self._slow_blocks if slow else [])
+        slow_blocks = self._slow_blocks
+        n = len(slow_blocks)
+        if self._cycle == 1 or not n:
+            # pierwszy odczyt: wszystko naraz, żeby encje od razu miały wartości
+            slow, next_pos = list(slow_blocks), 0
+        else:
+            # wolne rejestry partiami: każdy blok nadal raz na SLOW_EVERY cykli, ale w każdym cyklu tylko
+            # ~1/SLOW_EVERY bloków (krótkie dokładki zamiast długiej serii zapytań blokującej wspólną magistralę)
+            per_cycle = -(-n // SLOW_EVERY)
+            slow = [slow_blocks[(self._slow_pos + i) % n] for i in range(per_cycle)]
+            next_pos = (self._slow_pos + per_cycle) % n
+        # bloki z niedawno zapisanymi rejestrami (szybki podgląd efektu zmiany ustawienia)
+        extra = [
+            b
+            for b in slow_blocks
+            if b not in slow and any(b[0] <= a < b[0] + b[1] for a in self._refresh_addrs)
+        ]
+        blocks = list(self._fast_blocks) + slow + extra
         data = dict(self.data or {})
         try:
             for block in blocks:
                 await self._read_block(block, data)
         except SrneConnectionError as err:
             raise UpdateFailed(f"Błąd komunikacji z falownikiem: {err}") from err
+        # wskaźnik przesuwamy dopiero po udanym cyklu (po błędzie te same bloki zostaną ponowione)
+        self._slow_pos = next_pos
+        self._refresh_addrs.clear()
+        _LOGGER.debug(
+            "Cykl %s: %s zapytań (szybkie %s, wolne %s, po zapisie %s)",
+            self._cycle,
+            len(blocks),
+            len(self._fast_blocks),
+            len(slow),
+            len(extra),
+        )
         return data
 
     @property
@@ -172,7 +199,7 @@ class SrneCoordinator(DataUpdateCoordinator[dict[int, int]]):
             raise HomeAssistantError(
                 f"Zapis do falownika nie powiódł się: {_describe(err, self._active_password is not None)}"
             ) from err
-        self._force_slow = True
+        self._refresh_addrs.update(address for address, _ in writes)
         self.async_set_updated_data({**(self.data or {}), **dict(writes)})
         await self.async_request_refresh()
 

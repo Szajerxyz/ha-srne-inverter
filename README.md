@@ -1,6 +1,6 @@
-# SRNE Inverter – integracja Home Assistant Waveshare RS485 TO ETH (B) (Modbus TCP)
+# SRNE Inverter – integracja Home Assistant (Modbus TCP)
 
-Falownik SRNE HESP48120SH3 jako urządzenie w Home Assistant, bez wpisów w `configuration.yaml`.
+Falownik SRNE HESP48120SH3 jako **jedno urządzenie** w Home Assistant, bez wpisów w `configuration.yaml`.
 Komunikacja: falownik → RS485 → Waveshare (tryb **Modbus TCP ↔ RTU**) → Home Assistant.
 
 ## Instalacja przez HACS
@@ -11,9 +11,20 @@ Komunikacja: falownik → RS485 → Waveshare (tryb **Modbus TCP ↔ RTU**) → 
 ## Instalacja ręczna
 Skopiuj `custom_components/srne_inverter` do `/config/custom_components/`, zrestartuj HA, dodaj integrację.
 
+## Migracja z YAML
+1. **Usuń/zakomentuj** blok `modbus:` z falownikiem (Waveshare zwykle przyjmuje jedno połączenie TCP naraz).
+2. Zrestartuj HA i dodaj integrację (IP, port 502, nazwa, slave 1).
+3. Encje mają nowe ID w formacie `<domena>.srne_<nazwa_angielska>` (np. `sensor.srne_battery_soc`) – zaktualizuj dashboardy, automatyzacje i panel Energia.
+
+## Zapis parametrów
+Zakresy w `registers.py` (`NUMBERS`) są zachowawcze – sprawdź je pod swoją instalację.
+Godziny: starszy bajt = godzina, młodszy = minuty (potwierdzone w dokumentacji SRNE).
+
+## Diagnostyka
+Akcja `srne_inverter.read_registers` (Narzędzia deweloperskie → Akcje) odczytuje dowolny zakres rejestrów, np. start `0xE000`, count `32`.
 
 ## Hasło ustawień zaawansowanych
-Część parametrów falownik pozwala zmieniać dopiero po wpisaniu hasła. Domyślnie integracja **nie przechowuje**
+Część parametrów (np. SOC rozładowania) falownik pozwala zmieniać dopiero po wpisaniu hasła. Domyślnie integracja **nie przechowuje**
 tego hasła – wpisujesz je przy odblokowaniu ustawień (patrz niżej). Jeśli automatyzacje mają zmieniać ustawienia bez odblokowywania,
 wpisz hasło w *Ustawienia → Urządzenia i usługi → SRNE Inverter → Konfiguruj* (jest wtedy przechowywane w konfiguracji HA).
 
@@ -29,15 +40,8 @@ zaawansowanych falownika** (do 5 cyfr).
   automatyzacji” (wtedy jest przechowywane w konfiguracji HA).
 - Po 5 błędnych hasłach z rzędu kolejne próby są wstrzymane na 60 s. Falownik bez ustawionego hasła (wartość 0) akceptuje dowolny kod.
 
-## Pliki srne_lcd_theme oraz dashboard_srne_lcd_widoki zawierają przykład dashbordu dla integracji
+## Ikona integracji
+Ikona znajduje się w `custom_components/srne_inverter/brand/` (`icon.png`, `icon@2x.png`) i jest wyświetlana przez Home Assistant 2026.3 lub nowszy.
 
-Motyw "SRNE LCD" - ciemny, w stylu ekranu falownika SRNE
-Instalacja: skopiuj do /config/themes/srne_lcd.yaml, w configuration.yaml dodaj:
-  frontend:
-  themes: !include_dir_merge_named themes
-i wykonaj: Narzędzia deweloperskie -> YAML -> Przeładuj motywy (albo restart HA).
-
-===== SRNE LCD v2: jedna zakładka + podwidoki (PV, Sieć, Magazyn, Odbiory, Falownik z ustawieniami) =====
-Wymagane: motyw "SRNE LCD" (srne_lcd_theme.yaml) oraz HACS: button-card, mushroom, apexcharts-card, modern-circular-gauge.
-Dopisz na końcu listy `views:` w surowym edytorze konfiguracji (wcięcie 2 spacje).
-Podwidoki (subview: true) nie są pokazywane na pasku zakładek - otwiera się je kliknięciem w kafelek.
+## Nazwy urządzeń
+Encje są podzielone na urządzenia z numerami: „Falownik SRNE – 1. Informacje”, „… – 2. Sieć i wyjście” itd. (nazwa wynika z nazwy wpisanej przy dodawaniu integracji).
