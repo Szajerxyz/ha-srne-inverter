@@ -39,8 +39,9 @@ def device_info_for(entry, key: str, names) -> DeviceInfo:
 
 
 class SrneEntity(CoordinatorEntity[SrneCoordinator]):
-    # Pełne nazwy z prefiksem "SRNE" (jak w dawnym YAML), bez nazwy urządzenia
-    _attr_has_entity_name = False
+    # Nazwa wyświetlana = nazwa urządzenia + nazwa encji, np. "Falownik SRNE – 4. Magazyn Energia rozładowania baterii dziś"
+    # (ID encji nie zależy od nazw - jest rejestrowane osobno z names/en.json)
+    _attr_has_entity_name = True
 
     def __init__(
         self, coordinator: SrneCoordinator, key: str, name: str, address: int, words: int = 1

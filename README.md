@@ -43,5 +43,7 @@ zaawansowanych falownika** (do 5 cyfr).
 ## Ikona integracji
 Ikona znajduje się w `custom_components/srne_inverter/brand/` (`icon.png`, `icon@2x.png`) i jest wyświetlana przez Home Assistant 2026.3 lub nowszy.
 
-## Nazwy urządzeń
+## Nazwy urządzeń i encji
+Nazwa wyświetlana encji to nazwa urządzenia + nazwa encji, np. „Falownik SRNE – 4. Magazyn Energia rozładowania baterii dziś” (bez powtarzania „SRNE”). ID encji (`sensor.srne_…`) nie zależą od nazw.
+
 Encje są podzielone na urządzenia z numerami: „Falownik SRNE – 1. Informacje”, „… – 2. Sieć i wyjście” itd. (nazwa wynika z nazwy wpisanej przy dodawaniu integracji).
