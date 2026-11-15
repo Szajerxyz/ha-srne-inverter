@@ -148,14 +148,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: SrneConfigEntry) -> bool
                 config_entry=entry,
                 disabled_by=er.RegistryEntryDisabler.INTEGRATION if disabled else None,
             )
-    # główne urządzenie musi istnieć przed podurządzeniami (via_device)
-    dr.async_get(hass).async_get_or_create(
+    # główne urządzenie musi istnieć przed podurządzeniami (via_device_id)
+    main_device = dr.async_get(hass).async_get_or_create(
         config_entry_id=entry.entry_id,
         identifiers={(DOMAIN, entry.entry_id)},
         name=device_name(entry, "info", coordinator.names),
         manufacturer=MANUFACTURER,
         model=MODEL,
     )
+    coordinator.main_device_id = main_device.id
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_reload_on_update))
     return True

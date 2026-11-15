@@ -19,7 +19,7 @@ def device_name(entry, group: str, names) -> str:
     return f"{entry.title} – {GROUP_NUMBER[group]}. {label}"
 
 
-def device_info_for(entry, key: str, names) -> DeviceInfo:
+def device_info_for(entry, key: str, names, main_device_id: str | None = None) -> DeviceInfo:
     """Urządzenie (grupa) dla danej encji; "info" = główne urządzenie."""
     group = group_of(key)
     if group == "info":
@@ -34,7 +34,7 @@ def device_info_for(entry, key: str, names) -> DeviceInfo:
         name=device_name(entry, group, names),
         manufacturer=MANUFACTURER,
         model=MODEL,
-        via_device=(DOMAIN, entry.entry_id),
+        via_device_id=main_device_id,
     )
 
 
@@ -52,7 +52,7 @@ class SrneEntity(CoordinatorEntity[SrneCoordinator]):
         self._words = words
         self._attr_name = coordinator.names.name(key, name)
         self._attr_unique_id = f"{entry.entry_id}_{key}"
-        self._attr_device_info = device_info_for(entry, key, coordinator.names)
+        self._attr_device_info = device_info_for(entry, key, coordinator.names, coordinator.main_device_id)
 
     def _guard(self) -> None:
         """Blokada ustawień: zgłasza błąd, jeśli zapis od użytkownika jest zablokowany."""

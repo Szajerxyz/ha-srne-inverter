@@ -75,6 +75,7 @@ class SrneCoordinator(DataUpdateCoordinator[dict[int, int]]):
         self.names = None  # ustawiane w async_setup_entry (obiekt Names)
         self.write_lock = WriteLock(entry.options.get(CONF_LOCK_MINUTES, DEFAULT_LOCK_MINUTES))
         self._relock_unsub = None
+        self.main_device_id: str | None = None  # id głównego urządzenia (ustawiane w async_setup_entry)
         raw_pwd = entry.options.get(CONF_PASSWORD, entry.data.get(CONF_PASSWORD, ""))
         # hasło zapisane w opcjach (opcjonalne) - używane tylko do zapisów bez użytkownika (automatyzacje)
         self._auto_password: int | None = int(raw_pwd) if str(raw_pwd).isdigit() else None

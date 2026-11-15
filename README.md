@@ -47,3 +47,6 @@ Ikona znajduje się w `custom_components/srne_inverter/brand/` (`icon.png`, `ico
 Nazwa wyświetlana encji to nazwa urządzenia + nazwa encji, np. „Falownik SRNE – 4. Magazyn Energia rozładowania baterii dziś” (bez powtarzania „SRNE”). ID encji (`sensor.srne_…`) nie zależą od nazw.
 
 Encje są podzielone na urządzenia z numerami: „Falownik SRNE – 1. Informacje”, „… – 2. Sieć i wyjście” itd. (nazwa wynika z nazwy wpisanej przy dodawaniu integracji).
+
+## Zgodność z Home Assistant
+Podurządzenia są łączone z głównym przez `via_device_id` (zamiast przestarzałego `via_device`, który przestaje działać w HA 2027.8).
